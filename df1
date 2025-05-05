@@ -1,0 +1,91 @@
+
+
+ <div class="content-wrapper">
+ @*CONTENT-CONTAINER 1 START: PROGRESS BAR & CONSUMABLE LIFE ESTIMATOR*@
+     <div class="content-container">
+         <div class="col-8 d-grid d-md-flex justify-content-md-center cmd-btn-container">
+             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward-track.png" /></button>
+             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward.png" /></button>
+             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/play-button-arrowhead.png" /></button>
+             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/pause.png" /></button>
+             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/fast-forward.png" /></button>
+             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/next.png" /></button>
+         </div>
+         <div class="speed-slider-container">
+         </div>
+     </div>
+     @*CONTENT CONTAINER 1 END*@
+     @*CONTENT CONTAINER 2 START: COMMAND BUTTONS & SPEED OVERRIDE SLIDER*@
+     <div class="content-container">
+         <div class="progress-bar-container"></div>
+         <div class="consumable-life-container"></div>
+     </div>
+     @*CONTENT CONTAINER 2 END*@
+ </div>
+        
+
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+:root {
+    --content-wrapper-width: 90vw;
+    --content-wrapper-height: auto;
+    --content-wrapper-display: flex;
+    --content-wrapper-flexdir: column;
+
+
+    --cmd-btn-bg: #d9d9d9;
+    --cmd-btn-color: #156082;
+    --cmd-btn-outline-inner: #042433;
+
+    --cmd-container-width: 90vw; 
+    --cmd-container-display: flex;
+    --cmd-container-height: 100px; 
+    --cmd-container-align-items: center;
+    --cmd-container-justify-content: center;
+    --cmd-container-flexdir: row;
+
+    --cmd-btn-container-width: 85%;
+
+    --speed-slider-width: 15%;
+
+    --consumable-life-container-width: 10%;
+}
+
+.content-wrapper {
+    display: var(--content-wrapper-display);
+    flex-direction: var(--content-wrapper-flexdir);
+    height: var(--content-wrapper-height);
+    width: var(--content-wrapper-width);
+}
+
+.command-container {
+
+}
+
+.cmd-btn {
+    width: 100px;
+    height: 75px;
+    background-color: #d9d9d9;
+    outline: 2px solid #156082;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    border-radius: 12px !important;
+}
+
+    .cmd-btn img {
+        width: auto;
+        height: 50px;
+        filter: drop-shadow(0px 100px 0 #156082) drop-shadow(1px 0 0 black) drop-shadow(0 1px 0 black) drop-shadow(-1px 0 0 black) drop-shadow(0 -1px 0 black);
+        transform: translateY(-100px);
+    }
+
+
+
+
+
+.cmd-btn-container {
+    width: 800px;
+}
