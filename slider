@@ -1,126 +1,127 @@
  :root {
-            --track-width: 300px;
-            --track-height: 40px;
-            --bar-width: 20px;
-            --bar-height: 60px; /* Taller than track */
-            --triangle-width: 20px;
-            --triangle-height: 50px; /* Taller than track for arrowhead feel */
-            --button-size: 30px;
-            --track-color: #D9D9D9;
-            --bar-color: #000000;
-            --text-color: #000000;
-            --font-size: 14px;
-            --button-margin: 30px; /* Increased from 20px to 30px for more space */
-            --container-height: var(--bar-height);
+    --track-width: 300px;
+    --track-height: 40px;
+    --bar-width: 20px;
+    --bar-height: 60px; /* Taller than track */
+    --triangle-width: 20px;
+    --triangle-height: 50px; /* Taller than track for arrowhead feel */
+    --button-size: 30px;
+    --track-color: #D9D9D9;
+    --bar-color: #000000;
+    --text-color: #000000;
+    --font-size: 14px;
+    --button-margin: 30px; /* Increased from 20px to 30px for more space */
+    --container-height: var(--bar-height);
         }
 
 
 
 
 .slider-buttons {
-            display: flex;
-            align-items: center;
-        }
+    display: flex;
+    align-items: center;
+}
 
-        .slider-container {
-            position: relative;
-            width: var(--track-width);
-            height: var(--container-height);
-        }
+.slider-container {
+    position: relative;
+    width: var(--track-width);
+    height: var(--container-height);
+}
 
-        .slider-track {
-            position: absolute;
-            top: calc((var(--container-height) - var(--track-height)) / 2);
-            width: 100%;
-            height: var(--track-height);
-            background: var(--track-color);
-        }
+.slider-track {
+    position: absolute;
+    top: calc((var(--container-height) - var(--track-height)) / 2);
+    width: 100%;
+    height: var(--track-height);
+    background: var(--track-color);
+}
 
-        /* Left triangle pointing west */
-        .slider-track::before {
-            content: '';
-            position: absolute;
-            left: calc(-1 * var(--triangle-width));
-            top: calc((var(--track-height) - var(--triangle-height)) / 2);
-            width: 0;
-            height: 0;
-            border-top: calc(var(--triangle-height) / 2) solid transparent;
-            border-bottom: calc(var(--triangle-height) / 2) solid transparent;
-            border-right: var(--triangle-width) solid var(--track-color);
-        }
+    /* Left triangle pointing west */
+    .slider-track::before {
+        content: '';
+        position: absolute;
+        left: calc(-1 * var(--triangle-width));
+        top: calc((var(--track-height) - var(--triangle-height)) / 2);
+        width: 0;
+        height: 0;
+        border-top: calc(var(--triangle-height) / 2) solid transparent;
+        border-bottom: calc(var(--triangle-height) / 2) solid transparent;
+        border-right: var(--triangle-width) solid var(--track-color);
+    }
 
-        /* Right triangle pointing east */
-        .slider-track::after {
-            content: '';
-            position: absolute;
-            right: calc(-1 * var(--triangle-width));
-            top: calc((var(--track-height) - var(--triangle-height)) / 2);
-            width: 0;
-            height: 0;
-            border-top: calc(var(--triangle-height) / 2) solid transparent;
-            border-bottom: calc(var(--triangle-height) / 2) solid transparent;
-            border-left: var(--triangle-width) solid var(--track-color);
-        }
+    /* Right triangle pointing east */
+    .slider-track::after {
+        content: '';
+        position: absolute;
+        right: calc(-1 * var(--triangle-width));
+        top: calc((var(--track-height) - var(--triangle-height)) / 2);
+        width: 0;
+        height: 0;
+        border-top: calc(var(--triangle-height) / 2) solid transparent;
+        border-bottom: calc(var(--triangle-height) / 2) solid transparent;
+        border-left: var(--triangle-width) solid var(--track-color);
+    }
 
-        .slider-bar {
-            position: absolute;
-            width: var(--bar-width);
-            height: var(--bar-height);
-            background: var(--bar-color);
-            top: 0;
-            left: 0;
-            cursor: grab;
-            z-index: 10;
-        }
+.slider-bar {
+    position: absolute;
+    width: var(--bar-width);
+    height: var(--bar-height);
+    background: var(--bar-color);
+    top: 0;
+    left: 0;
+    cursor: grab;
+    z-index: 10;
+}
 
-        .slider-percent-left {
-            position: absolute;
-            left: calc(-1 * var(--triangle-width) - 20px);
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-color);
-            font-size: var(--font-size);
-            z-index: 5;
-        }
+.slider-percent-left {
+    position: absolute;
+    left: calc(-1 * var(--triangle-width) - 20px);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color);
+    font-size: var(--font-size);
+    z-index: 5;
+}
 
-        .slider-percent-right {
-            position: absolute;
-            right: calc(-1 * var(--triangle-width) - 20px);
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-color);
-            font-size: var(--font-size);
-            z-index: 5;
-        }
+.slider-percent-right {
+    position: absolute;
+    right: calc(-1 * var(--triangle-width) - 20px);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color);
+    font-size: var(--font-size);
+    z-index: 5;
+}
 
-        .slider-btn {
-            width: var(--button-size);
-            height: var(--button-size);
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: var(--track-color);
-            border: 1px solid var(--text-color);
-            margin: 0 var(--button-margin); /* Applies increased spacing */
-        }
+.slider-btn {
+    width: var(--button-size);
+    height: var(--button-size);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--track-color);
+    border: 1px solid var(--text-color);
+    margin: 0 var(--button-margin); /* Applies increased spacing */
+}
 
-        .slider-btn span {
-            font-size: calc(var(--font-size) * 1.2);
-            color: var(--text-color);
-        }
+    .slider-btn span {
+        font-size: calc(var(--font-size) * 1.2);
+        color: var(--text-color);
+    }
 
-        .slider-btn-text {
-            font-size: calc(var(--font-size) * 0.8);
-            color: var(--text-color);
-        }
+.slider-btn-text {
+    font-size: calc(var(--font-size) * 0.8);
+    color: var(--text-color);
+}
 
-        .slider-label {
-            margin-top: 10px;
-            font-size: var(--font-size);
-            color: var(--text-color);
-        }
+.slider-label {
+    margin-top: 10px;
+    font-size: var(--font-size);
+    color: var(--text-color);
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
     let isDragging = false;
@@ -176,20 +177,19 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 
- <div class="slider-buttons">
-        <div class="slider-btn minus" title="Decrease by 5%">
-            <span>-</span>
-            <div class="slider-btn-text">-5%</div>
-        </div>
-        <div class="slider-container">
-            <div class="slider-track"></div>
-            <div class="slider-bar"></div>
-            <div class="slider-percent-left">0%</div>
-            <div class="slider-percent-right">100%</div>
-        </div>
-        <div class="slider-btn plus" title="Increase by 5%">
-            <span>+</span>
-            <div class="slider-btn-text">+5%</div>
-        </div>
-    </div>
-    <div class="slider-label">Speed Override</div>
+  <div class="speed-slider-container">
+     <div class="slider-btn minus" title="Decrease by 5%">
+         <span>-</span>
+         <div class="slider-btn-text">-5%</div>
+     </div>
+     <div class="slider-container">
+         <div class="slider-track"></div>
+         <div class="slider-bar"></div>
+         <div class="slider-percent-left">0%</div>
+         <div class="slider-percent-right">100%</div>
+     </div>
+     <div class="slider-btn plus" title="Increase by 5%">
+         <span>+</span>
+         <div class="slider-btn-text">+5%</div>
+     </div>
+ </div>
