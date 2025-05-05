@@ -1,0 +1,145 @@
+:root {
+    --main-width: 90vw; /* Container width */
+    --slider-width: 300px; /* Track width */
+    --slider-height: 40px; /* Track height */
+    --slider-bar-width: 10px; /* Bar width */
+    --triangle-size: 20px; /* Triangular end size */
+    --button-size: 30px; /* Button size */
+    --track-color: #D9D9D9; /* Grey track */
+    --bar-color: #000000; /* Black bar */
+    --text-color: #000000; /* Percentage text */
+    --font-size: 14px; /* Percentage text size */
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    width: var(--main-width);
+    margin: 20px auto;
+}
+
+.slider-track {
+    position: relative;
+    width: var(--slider-width);
+    height: var(--slider-height);
+    background: var(--track-color);
+}
+
+.slider-end-left, .slider-end-right {
+    width: 0;
+    height: 0;
+    border: var(--triangle-size) solid transparent;
+    position: absolute;
+}
+
+.slider-end-left {
+    border-right-color: var(--track-color);
+    left: calc(-1 * var(--triangle-size) * 2);
+}
+
+.slider-end-right {
+    border-left-color: var(--track-color);
+    right: calc(-1 * var(--triangle-size) * 2);
+}
+
+.slider-percent-left, .slider-percent-right {
+    position: absolute;
+    font-size: var(--font-size);
+    color: var(--text-color);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.slider-percent-left {
+    left: calc(-1 * var(--triangle-size) * 1.5);
+}
+
+.slider-percent-right {
+    right: calc(-1 * var(--triangle-size) * 1.5);
+}
+
+.slider-bar {
+    position: absolute;
+    width: var(--slider-bar-width);
+    height: var(--slider-height);
+    background: var(--bar-color);
+    cursor: grab;
+    left: 0;
+}
+
+.slider-btn {
+    width: var(--button-size);
+    height: var(--button-size);
+    background: var(--track-color);
+    border: 1px solid var(--text-color);
+    font-size: var(--font-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.slider-btn:hover {
+    background: #B0B0B0;
+}
+
+
+let isDragging = false;
+let currentPercentage = 0;
+
+function initSlider() {
+    const bar = document.querySelector('.slider-bar');
+    const track = document.querySelector('.slider-track');
+    const leftPercent = document.querySelector('.slider-percent-left');
+    const rightPercent = document.querySelector('.slider-percent-right');
+    const minusBtn = document.querySelector('.slider-btn.minus');
+    const plusBtn = document.querySelector('.slider-btn.plus');
+
+    function updatePercentage(percentage) {
+        currentPercentage = Math.max(0, Math.min(100, Math.round(percentage / 5) * 5));
+        leftPercent.textContent = `${currentPercentage}%`;
+        rightPercent.textContent = `${100 - currentPercentage}%`;
+        const trackWidth = track.offsetWidth - bar.offsetWidth;
+        bar.style.left = `${(currentPercentage / 100) * trackWidth}px`;
+    }
+
+    bar.addEventListener('mousedown', () => {
+        isDragging = true;
+        bar.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        bar.style.cursor = 'grab';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            const rect = track.getBoundingClientRect();
+            let newX = e.clientX - rect.left - bar.offsetWidth / 2;
+            newX = Math.max(0, Math.min(newX, rect.width - bar.offsetWidth));
+            const percentage = (newX / (rect.width - bar.offsetWidth)) * 100;
+            updatePercentage(percentage);
+        }
+    });
+
+    minusBtn.addEventListener('click', () => updatePercentage(currentPercentage - 5));
+    plusBtn.addEventListener('click', () => updatePercentage(currentPercentage + 5));
+
+    updatePercentage(0);
+}
+
+document.addEventListener('DOMContentLoaded', initSlider);
+
+<div class="slider-container">
+    <button class="slider-btn minus" title="Decrease by 5%">−5%</button>
+    <div class="slider-track">
+        <div class="slider-end-left"></div>
+        <div class="slider-percent-left">0%</div>
+        <div class="slider-bar"></div>
+        <div class="slider-percent-right">100%</div>
+        <div class="slider-end-right"></div>
+    </div>
+    <button class="slider-btn plus" title="Increase by 5%">+5%</button>
+</div>
