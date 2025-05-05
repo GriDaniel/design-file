@@ -122,52 +122,59 @@
             color: var(--text-color);
         }
 
+document.addEventListener("DOMContentLoaded", () => {
+    let isDragging = false;
+    let currentPercentage = 0;
 
- let isDragging = false;
-        let currentPercentage = 0;
+    function initSlider() {
+        console.log("hello!");
+        const bar = document.querySelector('.slider-bar');
+        console.log(bar);
+        const track = document.querySelector('.slider-track');
+        console.log(track);
+        const leftPercent = document.querySelector('.slider-percent-left');
+        const rightPercent = document.querySelector('.slider-percent-right');
+        const minusBtn = document.querySelector('.slider-btn.minus');
+        const plusBtn = document.querySelector('.slider-btn.plus');
 
-        function initSlider() {
-            const bar = document.querySelector('.slider-bar');
-            const track = document.querySelector('.slider-track');
-            const leftPercent = document.querySelector('.slider-percent-left');
-            const rightPercent = document.querySelector('.slider-percent-right');
-            const minusBtn = document.querySelector('.slider-btn.minus');
-            const plusBtn = document.querySelector('.slider-btn.plus');
-
-            function updatePercentage(percentage) {
-                currentPercentage = Math.max(0, Math.min(100, Math.round(percentage / 5) * 5));
-                leftPercent.textContent = `${currentPercentage}%`;
-                rightPercent.textContent = `${100 - currentPercentage}%`;
-                const trackWidth = track.offsetWidth - bar.offsetWidth;
-                bar.style.left = `${(currentPercentage / 100) * trackWidth}px`;
-            }
-
-            bar.addEventListener('mousedown', (e) => {
-                e.preventDefault();
-                isDragging = true;
-            });
-
-            document.addEventListener('mouseup', () => {
-                isDragging = false;
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    const rect = track.getBoundingClientRect();
-                    let newX = e.clientX - rect.left;
-                    newX = Math.max(0, Math.min(newX, rect.width - bar.offsetWidth));
-                    const percentage = (newX / (rect.width - bar.offsetWidth)) * 100;
-                    updatePercentage(percentage);
-                }
-            });
-
-            minusBtn.addEventListener('click', () => updatePercentage(currentPercentage - 5));
-            plusBtn.addEventListener('click', () => updatePercentage(currentPercentage + 5));
-
-            updatePercentage(0);
+        function updatePercentage(percentage) {
+            currentPercentage = Math.max(0, Math.min(100, Math.round(percentage / 5) * 5));
+            leftPercent.textContent = `${currentPercentage}%`;
+            rightPercent.textContent = `${100 - currentPercentage}%`;
+            const trackWidth = track.offsetWidth - bar.offsetWidth;
+            bar.style.left = `${(currentPercentage / 100) * trackWidth}px`;
         }
 
-        document.addEventListener('DOMContentLoaded', initSlider);
+        bar.addEventListener('mousedown', (e) => {
+            console.log("yo!");
+            e.preventDefault();
+            isDragging = true;
+
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                console.log("yo!");
+                const rect = track.getBoundingClientRect();
+                let newX = e.clientX - rect.left;
+                newX = Math.max(0, Math.min(newX, rect.width - bar.offsetWidth));
+                const percentage = (newX / (rect.width - bar.offsetWidth)) * 100;
+                updatePercentage(percentage);
+            }
+        });
+
+        minusBtn.addEventListener('click', () => updatePercentage(currentPercentage - 5));
+        plusBtn.addEventListener('click', () => updatePercentage(currentPercentage + 5));
+
+        updatePercentage(0);
+    }
+    initSlider();
+})
+
 
  <div class="slider-buttons">
         <div class="slider-btn minus" title="Decrease by 5%">
