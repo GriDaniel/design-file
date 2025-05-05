@@ -1,91 +1,132 @@
+ <style>
+        :root {
+            --content-wrapper-width: 90vw;
+            --content-wrapper-height: auto;
+            --content-wrapper-display: flex;
+            --content-wrapper-flexdir: column;
+            --content-wrapper-margin: 0 auto;
+            --content-wrapper-padding: 10px;
+            --content-wrapper-test-border: 2px solid red;
 
+            --content-container-display: flex;
+            --content-container-flexdir: row;
+            --content-container-width: 100%;
+            --content-container-margin-bottom: 10px;
+            --content-container-padding: 10px;
+            --content-container-test-border: 2px solid blue;
 
- <div class="content-wrapper">
- @*CONTENT-CONTAINER 1 START: PROGRESS BAR & CONSUMABLE LIFE ESTIMATOR*@
-     <div class="content-container">
-         <div class="col-8 d-grid d-md-flex justify-content-md-center cmd-btn-container">
-             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward-track.png" /></button>
-             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward.png" /></button>
-             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/play-button-arrowhead.png" /></button>
-             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/pause.png" /></button>
-             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/fast-forward.png" /></button>
-             <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/next.png" /></button>
-         </div>
-         <div class="speed-slider-container">
-         </div>
-     </div>
-     @*CONTENT CONTAINER 1 END*@
-     @*CONTENT CONTAINER 2 START: COMMAND BUTTONS & SPEED OVERRIDE SLIDER*@
-     <div class="content-container">
-         <div class="progress-bar-container"></div>
-         <div class="consumable-life-container"></div>
-     </div>
-     @*CONTENT CONTAINER 2 END*@
- </div>
-        
+            --cmd-btn-width: 100px;
+            --cmd-btn-height: 75px;
+            --cmd-btn-bg: #d9d9d9;
+            --cmd-btn-color: #156082;
+            --cmd-btn-outline-inner: #042433;
+            --cmd-btn-display: flex;
+            --cmd-btn-justify-content: center;
+            --cmd-btn-align-items: center;
+            --cmd-btn-padding: 0;
+            --cmd-btn-border-radius: 12px;
+            --cmd-btn-test-border: 2px solid green;
 
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+            --cmd-btn-img-height: 50px;
+            --cmd-btn-img-shadow-color: #156082;
+            --cmd-btn-img-shadow-offset: 100px;
+            --cmd-btn-img-border-color: black;
+            --cmd-btn-img-transform: translateY(-100px);
 
-:root {
-    --content-wrapper-width: 90vw;
-    --content-wrapper-height: auto;
-    --content-wrapper-display: flex;
-    --content-wrapper-flexdir: column;
+            --cmd-btn-container-width: 85%;
+            --cmd-btn-container-padding: 10px;
+            --cmd-btn-container-test-border: 2px solid purple;
 
+            --speed-slider-width: 15%;
+            --speed-slider-padding: 10px;
+            --speed-slider-bg: #f0f0f0;
+            --speed-slider-text-align: center;
+            --speed-slider-test-border: 2px solid orange;
 
-    --cmd-btn-bg: #d9d9d9;
-    --cmd-btn-color: #156082;
-    --cmd-btn-outline-inner: #042433;
+            --progress-bar-container-width: 90%;
+            --progress-bar-container-padding: 10px;
+            --progress-bar-container-bg: #e0e0e0;
+            --progress-bar-container-text-align: center;
+            --progress-bar-container-test-border: 2px solid cyan;
 
-    --cmd-container-width: 90vw; 
-    --cmd-container-display: flex;
-    --cmd-container-height: 100px; 
-    --cmd-container-align-items: center;
-    --cmd-container-justify-content: center;
-    --cmd-container-flexdir: row;
+            --consumable-life-container-width: 10%;
+            --consumable-life-container-padding: 10px;
+            --consumable-life-container-bg: #d0d0d0;
+            --consumable-life-container-text-align: center;
+            --consumable-life-container-test-border: 2px solid magenta;
+        }
 
-    --cmd-btn-container-width: 85%;
+        .content-wrapper {
+            display: var(--content-wrapper-display);
+            flex-direction: var(--content-wrapper-flexdir);
+            height: var(--content-wrapper-height);
+            width: var(--content-wrapper-width);
+            margin: var(--content-wrapper-margin);
+            padding: var(--content-wrapper-padding);
+            border: var(--content-wrapper-test-border);
+        }
 
-    --speed-slider-width: 15%;
+        .content-container {
+            display: var(--content-container-display);
+            flex-direction: var(--content-container-flexdir);
+            width: var(--content-container-width);
+            margin-bottom: var(--content-container-margin-bottom);
+            padding: var(--content-container-padding);
+            border: var(--content-container-test-border);
+        }
 
-    --consumable-life-container-width: 10%;
-}
+        .cmd-btn {
+            width: var(--cmd-btn-width);
+            height: var(--cmd-btn-height);
+            background-color: var(--cmd-btn-bg);
+            outline: 2px solid var(--cmd-btn-color);
+            overflow: hidden;
+            display: var(--cmd-btn-display);
+            justify-content: var(--cmd-btn-justify-content);
+            align-items: var(--cmd-btn-align-items);
+            padding: var(--cmd-btn-padding);
+            border-radius: var(--cmd-btn-border-radius) !important;
+            border: var(--cmd-btn-test-border);
+        }
 
-.content-wrapper {
-    display: var(--content-wrapper-display);
-    flex-direction: var(--content-wrapper-flexdir);
-    height: var(--content-wrapper-height);
-    width: var(--content-wrapper-width);
-}
+        .cmd-btn img {
+            width: auto;
+            height: var(--cmd-btn-img-height);
+            filter: drop-shadow(0px var(--cmd-btn-img-shadow-offset) 0 var(--cmd-btn-img-shadow-color))
+                    drop-shadow(1px 0 0 var(--cmd-btn-img-border-color))
+                    drop-shadow(0 1px 0 var(--cmd-btn-img-border-color))
+                    drop-shadow(-1px 0 0 var(--cmd-btn-img-border-color))
+                    drop-shadow(0 -1px 0 var(--cmd-btn-img-border-color));
+            transform: var(--cmd-btn-img-transform);
+        }
 
-.command-container {
+        .cmd-btn-container {
+            width: var(--cmd-btn-container-width);
+            padding: var(--cmd-btn-container-padding);
+            border: var(--cmd-btn-container-test-border);
+        }
 
-}
+        .speed-slider-container {
+            width: var(--speed-slider-width);
+            padding: var(--speed-slider-padding);
+            background-color: var(--speed-slider-bg);
+            text-align: var(--speed-slider-text-align);
+            border: var(--speed-slider-test-border);
+        }
 
-.cmd-btn {
-    width: 100px;
-    height: 75px;
-    background-color: #d9d9d9;
-    outline: 2px solid #156082;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0px;
-    border-radius: 12px !important;
-}
+        .progress-bar-container {
+            width: var(--progress-bar-container-width);
+            padding: var(--progress-bar-container-padding);
+            background-color: var(--progress-bar-container-bg);
+            text-align: var(--progress-bar-container-text-align);
+            border: var(--progress-bar-container-test-border);
+        }
 
-    .cmd-btn img {
-        width: auto;
-        height: 50px;
-        filter: drop-shadow(0px 100px 0 #156082) drop-shadow(1px 0 0 black) drop-shadow(0 1px 0 black) drop-shadow(-1px 0 0 black) drop-shadow(0 -1px 0 black);
-        transform: translateY(-100px);
-    }
-
-
-
-
-
-.cmd-btn-container {
-    width: 800px;
-}
+        .consumable-life-container {
+            width: var(--consumable-life-container-width);
+            padding: var(--consumable-life-container-padding);
+            background-color: var(--consumable-life-container-bg);
+            text-align: var(--consumable-life-container-text-align);
+            border: var(--consumable-life-container-test-border);
+        }
+    </style>
