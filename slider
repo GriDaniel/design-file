@@ -1,4 +1,23 @@
-        .slider-buttons {
+ :root {
+            --track-width: 300px;
+            --track-height: 40px;
+            --bar-width: 20px;
+            --bar-height: 60px; /* Taller than track */
+            --triangle-width: 20px;
+            --triangle-height: 50px; /* Taller than track for arrowhead feel */
+            --button-size: 30px;
+            --track-color: #D9D9D9;
+            --bar-color: #000000;
+            --text-color: #000000;
+            --font-size: 14px;
+            --button-margin: 30px; /* Increased from 20px to 30px for more space */
+            --container-height: var(--bar-height);
+        }
+
+
+
+
+.slider-buttons {
             display: flex;
             align-items: center;
         }
