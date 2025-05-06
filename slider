@@ -17,111 +17,99 @@
 
 
 
-.slider-buttons {
-    display: flex;
-    align-items: center;
-}
-
 .slider-container {
-    position: relative;
-    width: var(--track-width);
-    height: var(--container-height);
-}
-
-.slider-track {
-    position: absolute;
-    top: calc((var(--container-height) - var(--track-height)) / 2);
-    width: 100%;
-    height: var(--track-height);
-    background: var(--track-color);
-}
-
-    /* Left triangle pointing west */
-    .slider-track::before {
-        content: '';
-        position: absolute;
-        left: calc(-1 * var(--triangle-width));
-        top: calc((var(--track-height) - var(--triangle-height)) / 2);
-        width: 0;
-        height: 0;
-        border-top: calc(var(--triangle-height) / 2) solid transparent;
-        border-bottom: calc(var(--triangle-height) / 2) solid transparent;
-        border-right: var(--triangle-width) solid var(--track-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      max-width: 600px;
     }
 
-    /* Right triangle pointing east */
-    .slider-track::after {
-        content: '';
-        position: absolute;
-        right: calc(-1 * var(--triangle-width));
-        top: calc((var(--track-height) - var(--triangle-height)) / 2);
-        width: 0;
-        height: 0;
-        border-top: calc(var(--triangle-height) / 2) solid transparent;
-        border-bottom: calc(var(--triangle-height) / 2) solid transparent;
-        border-left: var(--triangle-width) solid var(--track-color);
+    .left-control, .right-control {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-.slider-bar {
-    position: absolute;
-    width: var(--bar-width);
-    height: var(--bar-height);
-    background: var(--bar-color);
-    top: 0;
-    left: 0;
-    cursor: grab;
-    z-index: 10;
-}
-
-.slider-percent-left {
-    position: absolute;
-    left: calc(-1 * var(--triangle-width) - 20px);
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-color);
-    font-size: var(--font-size);
-    z-index: 5;
-}
-
-.slider-percent-right {
-    position: absolute;
-    right: calc(-1 * var(--triangle-width) - 20px);
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-color);
-    font-size: var(--font-size);
-    z-index: 5;
-}
-
-.slider-btn {
-    width: var(--button-size);
-    height: var(--button-size);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: var(--track-color);
-    border: 1px solid var(--text-color);
-    margin: 0 var(--button-margin); /* Applies increased spacing */
-}
-
-    .slider-btn span {
-        font-size: calc(var(--font-size) * 1.2);
-        color: var(--text-color);
+    .arrow {
+      background: none;
+      border: none;
+      color: blue;
+      font-size: 24px;
+      cursor: pointer;
+      margin-bottom: 5px;
     }
 
-.slider-btn-text {
-    font-size: calc(var(--font-size) * 0.8);
-    color: var(--text-color);
-}
+    .label {
+      color: blue;
+    }
 
-.slider-label {
-    margin-top: 10px;
-    font-size: var(--font-size);
-    color: var(--text-color);
-}
+    .track-container {
+      flex: 1;
+      position: relative;
+      height: 20px;
+    }
 
+    .track {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    .left-section {
+      background-color: #a9a9a9;
+      height: 100%;
+    }
+
+    .right-section {
+      background-color: #d3d3d3;
+      height: 100%;
+    }
+
+    .handle {
+      position: absolute;
+      top: -5px;
+      width: 10px;
+      height: 30px;
+      background-color: black;
+      cursor: grab;
+    }
+
+    .track::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 15px solid transparent;
+      border-bottom: 15px solid transparent;
+      border-right: 10px solid #a9a9a9;
+    }
+
+    .track::after {
+      content: '';
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 15px solid transparent;
+      border-bottom: 15px solid transparent;
+      border-left: 10px solid #d3d3d3;
+    }
+
+    .label.speed-override {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -40px;
+      color: blue;
+    }
 
 (function () {
     window.Slider = {
