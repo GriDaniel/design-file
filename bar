@@ -1,5 +1,5 @@
- let elapsed = 0; // Start at 0 seconds
-  const maxSeconds = 60; // Total duration in seconds
+ let startTime = Date.now();
+  const maxSeconds = 3;
 
   function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -9,20 +9,11 @@
   }
 
   function updateDisplay() {
-    // Update time display
-    const currentTimeStr = formatTime(elapsed);
+    const elapsedMs = Date.now() - startTime;
+    const elapsedSeconds = Math.floor(elapsedMs / 1000) % maxSeconds;
+    const currentTimeStr = formatTime(elapsedSeconds);
     const maxTimeStr = formatTime(maxSeconds);
     document.querySelector('.time').textContent = `${currentTimeStr} / ${maxTimeStr}`;
-
-    // Update progress bar width
-    const percentage = (elapsed / maxSeconds) * 100;
-    document.querySelector('.progress-bar').style.width = percentage + '%';
-
-    // Increment elapsed time and reset if complete
-    elapsed++;
-    if (elapsed > maxSeconds) {
-      elapsed = 0;
-    }
   }
 
   // Set initial date
@@ -34,7 +25,7 @@
   // Initial update
   updateDisplay();
 
-  // Update every second
+  // Update time display every second
   setInterval(updateDisplay, 1000);
 
 
