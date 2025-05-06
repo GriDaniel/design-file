@@ -1,0 +1,82 @@
+<div class="flex-row">
+  <div class="progress-bar-container">
+    <div class="progress-bar"></div>
+  </div>
+  <div class="text-container">
+    <div class="time"></div>
+    <div class="date"></div>
+  </div>
+</div>
+
+<style>
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .progress-bar-container {
+    flex: 1;
+    height: 5px;
+    background-color: #003366; /* Dark blue for unfilled part */
+    position: relative;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background-color: #66ccff; /* Light blue for filled part */
+    width: 0%; /* Initially 0% */
+  }
+
+  .text-container {
+    width: 180px; /* Adjusted static width to fit longer text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .time, .date {
+    text-align: center;
+    color: black;
+  }
+</style>
+
+<script>
+  let elapsed = 0; // Start at 0 seconds
+  const maxSeconds = 60; // Total seconds for countdown
+
+  function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  }
+
+  function updateDisplay() {
+    // Calculate current time
+    const currentTimeStr = formatTime(elapsed);
+    const maxTimeStr = formatTime(maxSeconds);
+    document.querySelector('.time').textContent = `${currentTimeStr} / ${maxTimeStr}`;
+
+    // Update progress bar width based on elapsed time percentage
+    const percentage = (elapsed / maxSeconds) * 100;
+    document.querySelector('.progress-bar').style.width = percentage + '%';
+
+    // Increment and reset elapsed time
+    elapsed++;
+    if (elapsed > maxSeconds) {
+      elapsed = 0; // Reset to 0 seconds
+    }
+  }
+
+  // Set initial date
+  const today = new Date();
+  const month = today.getMonth() + 1; // Months are 0-based
+  const day = today.getDate();
+  document.querySelector('.date').textContent = `${month}/${day}`;
+
+  // Initial update
+  updateDisplay();
+
+  // Update every second
+  setInterval(updateDisplay, 1000);
+</script>
