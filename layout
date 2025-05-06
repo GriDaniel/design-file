@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Layout Demo</title>
+  <style>
+    .wrapper {
+      height: auto;
+      width: 100%; /* Takes full width of parent */
+    }
+
+    .row {
+      display: flex;
+    }
+
+    .row-0 {
+      flex-direction: row;
+    }
+
+    .col-00 {
+      flex: 1; /* Grows and shrinks to take remaining space */
+      background-color: #f0f0f0;
+    }
+
+    .col-01 {
+      flex: 0 0 100px; /* Static width of 100px */
+      background-color: #e0e0e0;
+    }
+
+    .row-1 {
+      flex-wrap: wrap; /* Allows wrapping when min-widths are threatened */
+    }
+
+    .col-10 {
+      flex: 1 0 70%; /* 70% basis, grows to fill when wrapped */
+      min-width: 200px; /* Minimum width before wrapping */
+      background-color: #d0d0d0;
+    }
+
+    .col-11 {
+      flex: 1 0 30%; /* 30% basis, grows to fill when wrapped */
+      min-width: 150px; /* Minimum width before wrapping */
+      background-color: #c0c0c0;
+    }
+
+    /* Optional styling for visibility */
+    .col {
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="row row-0">
+      <div class="col col-00">00</div>
+      <div class="col col-01">01</div>
+    </div>
+    <div class="row row-1">
+      <div class="col col-10">10</div>
+      <div class="col col-11">11</div>
+    </div>
+  </div>
+</body>
+</html>
