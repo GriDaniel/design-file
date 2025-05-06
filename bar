@@ -1,5 +1,49 @@
- let startTime = Date.now();
+<div class="flex-row">
+  <div class="progress-bar-container">
+    <div class="progress-bar"></div>
+  </div>
+  <div class="text-container">
+    <div class="time"></div>
+    <div class="date"></div>
+  </div>
+</div>
+
+<style>
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .progress-bar-container {
+    flex: 1;
+    height: 5px;
+    background-color: #003366;
+    position: relative;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background-color: #66ccff;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  .text-container {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .time, .date {
+    text-align: center;
+    color: black;
+  }
+</style>
+
+<script>
   const maxSeconds = 3;
+  let startTime = Date.now();
 
   function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -14,48 +58,23 @@
     const currentTimeStr = formatTime(elapsedSeconds);
     const maxTimeStr = formatTime(maxSeconds);
     document.querySelector('.time').textContent = `${currentTimeStr} / ${maxTimeStr}`;
+
+    const percentage = (elapsedMs / (maxSeconds * 1000)) * 100;
+    document.querySelector('.progress-bar').style.width = percentage + '%';
+
+    if (elapsedMs >= maxSeconds * 1000) {
+      startTime = Date.now();
+    }
+
+    requestAnimationFrame(updateDisplay);
   }
 
   // Set initial date
   const today = new Date();
-  const month = today.getMonth() + 1; // Months are 0-based
+  const month = today.getMonth() + 1;
   const day = today.getDate();
   document.querySelector('.date').textContent = `${month}/${day}`;
 
-  // Initial update
+  // Start the update loop
   updateDisplay();
-
-  // Update time display every second
-  setInterval(updateDisplay, 1000);
-
-
-.flex-row {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .progress-bar-container {
-    flex: 1;
-    height: 5px;
-    background-color: #003366; /* Dark blue for unfilled part */
-    position: relative;
-  }
-
-  .progress-bar {
-    height: 100%;
-    background-color: #66ccff; /* Light blue for filled part */
-    width: 0%; /* Initially 0% */
-    transition: width 1s linear; /* Smooth transition over 1 second */
-  }
-
-  .text-container {
-    width: 180px; /* Static width for text */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .time, .date {
-    text-align: center;
-    color: black;
-  }
+</script>
