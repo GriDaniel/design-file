@@ -1,48 +1,5 @@
-<div class="flex-row">
-  <div class="progress-bar-container">
-    <div class="progress-bar"></div>
-  </div>
-  <div class="text-container">
-    <div class="time"></div>
-    <div class="date"></div>
-  </div>
-</div>
-
-<style>
-  .flex-row {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .progress-bar-container {
-    flex: 1;
-    height: 5px;
-    background-color: #003366; /* Dark blue for unfilled part */
-    position: relative;
-  }
-
-  .progress-bar {
-    height: 100%;
-    background-color: #66ccff; /* Light blue for filled part */
-    width: 0%; /* Initially 0% */
-  }
-
-  .text-container {
-    width: 180px; /* Adjusted static width to fit longer text */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .time, .date {
-    text-align: center;
-    color: black;
-  }
-</style>
-
-<script>
-  let elapsed = 0; // Start at 0 seconds
-  const maxSeconds = 60; // Total seconds for countdown
+ let elapsed = 0; // Start at 0 seconds
+  const maxSeconds = 60; // Total duration in seconds
 
   function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -52,19 +9,19 @@
   }
 
   function updateDisplay() {
-    // Calculate current time
+    // Update time display
     const currentTimeStr = formatTime(elapsed);
     const maxTimeStr = formatTime(maxSeconds);
     document.querySelector('.time').textContent = `${currentTimeStr} / ${maxTimeStr}`;
 
-    // Update progress bar width based on elapsed time percentage
+    // Update progress bar width
     const percentage = (elapsed / maxSeconds) * 100;
     document.querySelector('.progress-bar').style.width = percentage + '%';
 
-    // Increment and reset elapsed time
+    // Increment elapsed time and reset if complete
     elapsed++;
     if (elapsed > maxSeconds) {
-      elapsed = 0; // Reset to 0 seconds
+      elapsed = 0;
     }
   }
 
@@ -79,4 +36,3 @@
 
   // Update every second
   setInterval(updateDisplay, 1000);
-</script>
