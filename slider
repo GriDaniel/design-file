@@ -210,19 +210,21 @@
 })();
 
 
-  <div class="speed-slider-container">
-     <div class="slider-btn minus" title="Decrease by 5%">
-         <span>-</span>
-         <div class="slider-btn-text">-5%</div>
-     </div>
-     <div class="slider-container">
-         <div class="slider-track"></div>
-         <div class="slider-bar"></div>
-         <div class="slider-percent-left">0%</div>
-         <div class="slider-percent-right">100%</div>
-     </div>
-     <div class="slider-btn plus" title="Increase by 5%">
-         <span>+</span>
-         <div class="slider-btn-text">+5%</div>
-     </div>
- </div>
+<div class="slider-container">
+    <div class="left-control">
+      <button class="arrow left">-</button>
+      <div class="label minus-five">-5%</div>
+    </div>
+    <div class="track-container">
+      <div class="track">
+        <div class="left-section"></div>
+        <div class="right-section"></div>
+      </div>
+      <div class="handle"></div>
+    </div>
+    <div class="right-control">
+      <button class="arrow right">+</button>
+      <div class="label plus-five">+5%</div>
+    </div>
+    <div class="label speed-override">Speed Override</div>
+  </div>
