@@ -36,3 +36,35 @@
 
   // Update every second
   setInterval(updateDisplay, 1000);
+
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .progress-bar-container {
+    flex: 1;
+    height: 5px;
+    background-color: #003366; /* Dark blue for unfilled part */
+    position: relative;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background-color: #66ccff; /* Light blue for filled part */
+    width: 0%; /* Initially 0% */
+    transition: width 1s linear; /* Smooth transition over 1 second */
+  }
+
+  .text-container {
+    width: 180px; /* Static width for text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .time, .date {
+    text-align: center;
+    color: black;
+  }
