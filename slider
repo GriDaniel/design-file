@@ -114,79 +114,66 @@
 (function () {
     window.Slider = {
         initSlider: function () {
-            console.log("Initializing slider");
-            let isDragging = false;
-            let currentPercentage = 0;
+           const track = document.querySelector('.track');
+    const leftSection = document.querySelector('.left-section');
+    const rightSection = document.querySelector('.right-section');
+    const handle = document.querySelector('.handle');
+    const leftArrow = document.querySelector('.arrow.left');
+    const rightArrow = document.querySelector('.arrow.right');
 
-            const bar = document.querySelector('.slider-bar');
-            const track = document.querySelector('.slider-track');
-            const leftPercent = document.querySelector('.slider-percent-left');
-            const rightPercent = document.querySelector('.slider-percent-right');
-            const minusBtn = document.querySelector('.slider-btn.minus');
-            const plusBtn = document.querySelector('.slider-btn.plus');
+    let isDragging = false;
+    let W = track.clientWidth;
+    let P = W / 2; // Initial position at 50%, representing 0%
 
-            if (!bar || !track || !leftPercent || !rightPercent || !minusBtn || !plusBtn) {
-                console.error("One or more slider elements not found:", { bar, track, leftPercent, rightPercent, minusBtn, plusBtn });
-                return;
-            }
+    function updateSlider() {
+      leftSection.style.width = P + 'px';
+      rightSection.style.width = (W - P) + 'px';
+      handle.style.left = (P - 5) + 'px'; // Center handle (width: 10px)
+    }
 
-            function updatePercentage(percentage) {
-                console.log("Updating percentage to:", percentage);
-                currentPercentage = Math.max(0, Math.min(100, Math.round(percentage / 5) * 5));
-                leftPercent.textContent = `${currentPercentage}%`;
-                rightPercent.textContent = `${100 - currentPercentage}%`;
-                const trackWidth = track.offsetWidth - bar.offsetWidth;
-                console.log("Track width:", trackWidth);
-                bar.style.left = `${(currentPercentage / 100) * trackWidth}px`;
-                console.log("Bar left:", bar.style.left);
-            }
+    // Initialize slider
+    updateSlider();
 
-            // Remove any existing listeners to prevent duplicates
-            bar.removeEventListener('mousedown', handleMouseDown);
-            document.removeEventListener('mouseup', handleMouseUp);
-            document.removeEventListener('mousemove', handleMouseMove);
-            minusBtn.removeEventListener('click', handleMinusClick);
-            plusBtn.removeEventListener('click', handlePlusClick);
+    // Handle dragging
+    handle.addEventListener('mousedown', () => {
+      isDragging = true;
+      handle.style.cursor = 'grabbing';
+    });
 
-            function handleMouseDown(e) {
-                console.log("Mousedown on bar");
-                e.preventDefault();
-                isDragging = true;
-            }
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const rect = track.getBoundingClientRect();
+        P = e.clientX - rect.left;
+        if (P < 0) P = 0;
+        if (P > W) P = W;
+        updateSlider();
+      }
+    });
 
-            function handleMouseUp() {
-                console.log("Mouseup");
-                isDragging = false;
-            }
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      handle.style.cursor = 'grab';
+    });
 
-            function handleMouseMove(e) {
-                if (isDragging) {
-                    console.log("Dragging");
-                    const rect = track.getBoundingClientRect();
-                    let newX = e.clientX - rect.left;
-                    newX = Math.max(0, Math.min(newX, rect.width - bar.offsetWidth));
-                    const percentage = (newX / (rect.width - bar.offsetWidth)) * 100;
-                    updatePercentage(percentage);
-                }
-            }
+    // Arrow buttons
+    leftArrow.addEventListener('click', () => {
+      P -= 10; // Step size of 10px
+      if (P < 0) P = 0;
+      updateSlider();
+    });
 
-            function handleMinusClick() {
-                console.log("Minus button clicked");
-                updatePercentage(currentPercentage - 5);
-            }
+    rightArrow.addEventListener('click', () => {
+      P += 10;
+      if (P > W) P = W;
+      updateSlider();
+    });
 
-            function handlePlusClick() {
-                console.log("Plus button clicked");
-                updatePercentage(currentPercentage + 5);
-            }
-
-            bar.addEventListener('mousedown', handleMouseDown);
-            document.addEventListener('mouseup', handleMouseUp);
-            document.addEventListener('mousemove', handleMouseMove);
-            minusBtn.addEventListener('click', handleMinusClick);
-            plusBtn.addEventListener('click', handlePlusClick);
-
-            updatePercentage(0);
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      W = track.clientWidth;
+      if (P > W) P = W;
+      updateSlider();
+    });
         }
     };
 
