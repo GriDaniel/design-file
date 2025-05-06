@@ -1,0 +1,22 @@
+const batteryDiv = document.getElementById('battery');
+
+const states = [
+  { state: 'full', color: 'green', height: '200px' },
+  { state: 'medium', color: 'yellow', height: '100px' },
+  { state: 'low', color: 'red', height: '40px' }
+];
+
+let currentIndex = 0;
+
+function updateBattery() {
+  const currentState = states[currentIndex];
+  batteryDiv.style.backgroundColor = currentState.color;
+  batteryDiv.style.height = currentState.height;
+  currentIndex = (currentIndex + 1) % states.length;
+}
+
+// Set initial state immediately
+updateBattery();
+
+// Cycle every second
+setInterval(updateBattery, 1000);
