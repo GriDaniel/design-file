@@ -6,20 +6,21 @@
   <title>Battery Indicator</title>
   <style>
     #battery-container {
-      position: relative;
-      width: 50px;
-      height: 200px;
-      border: 2px solid black;
-      background-color: #f0f0f0;
-      overflow: hidden;
-    }
+  position: relative;
+  width: 50px;
+  height: 200px;
+  border: 2px solid black;
+  background-color: #f0f0f0;
+  overflow: hidden;
+}
 
-    #battery-level {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      transition: height 0.5s ease, background-color 0.5s ease;
+#battery-level {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: height 0.5s ease, background-color 0.5s ease;
+}
     }
   </style>
 </head>
@@ -28,24 +29,23 @@
     <div id="battery-level"></div>
   </div>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const batteryLevelDiv = document.getElementById('battery-level');
-      const states = [
-        { height: '40px', color: 'red' },
-        { height: '100px', color: 'yellow' },
-        { height: '200px', color: 'green' }
-      ];
-      let currentIndex = 0;
+const batteryLevelDiv = document.getElementById('battery-level');
+  const states = [
+    { height: '40px', color: 'red' },    // Low
+    { height: '100px', color: 'yellow' }, // Medium
+    { height: '200px', color: 'green' }  // Full
+  ];
+  let currentIndex = 0;
 
-      function updateBattery() {
-        const currentState = states[currentIndex];
-        batteryLevelDiv.style.height = currentState.height;
-        batteryLevelDiv.style.backgroundColor = currentState.color;
-        currentIndex = (currentIndex + 1) % states.length;
-      }
+  function updateBattery() {
+    const currentState = states[currentIndex];
+    batteryLevelDiv.style.height = currentState.height;
+    batteryLevelDiv.style.backgroundColor = currentState.color;
+    currentIndex = (currentIndex + 1) % states.length;
+  }
 
-      updateBattery();
-      setInterval(updateBattery, 1000);
+  updateBattery(); // Set initial state
+  setInterval(updateBattery, 1000); // Cycle every second
     });
   </script>
 </body>
