@@ -6,202 +6,330 @@
     <title>William's Structure</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #156082;
-            --secondary-color: #DADADA;
-            --progress-bar-height: 5px;
-            --progress-bar-bg: #003366;
-            --progress-bar-fill: #66ccff;
-            --font-size-large: 28px;
-            --font-size-small: 10px;
-            --battery-width: 35px;
-            --battery-height: 100px;
-            --battery-bg: #AEAEAE;
-            --track-color: #7F7F7F;
-            --handle-color: #000000;
-            --cmd-btn-width: 110px;
-            --cmd-btn-height: 90px;
-            --cmd-btn-bg: #d9d9d9;
-            --wrapper-width: 90%;
-            --wrapper-min-width: 400px;
-            --text-container-width: 180px;
-            --slider-col-width: 300px;
-            --track-height: 20px;
-            --handle-height: 65px;
-        }
+       @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-        .wrapper {
-            width: var(--wrapper-width);
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-            min-width: var(--wrapper-min-width);
-        }
+:root {
+    --content-wrapper-width: 90vw;
+    --content-wrapper-height: auto;
+    --content-wrapper-display: flex;
+    --content-wrapper-flexdir: column;
+    --content-wrapper-margin: 0 auto;
+    --content-wrapper-test-border: 2px solid red;
+    --content-container-display: flex;
+    --content-container-flexdir: row;
+    --content-container-width: 100%;
+    --content-container-margin-bottom: 10px;
+    --content-container-test-border: 2px solid blue;
+    --cmd-btn-width: 110px;
+    --cmd-btn-height: 90px;
+    --cmd-btn-bg: #d9d9d9;
+    --cmd-btn-color: #156082;
+    --cmd-btn-outline-inner: #042433;
+    --cmd-btn-display: flex;
+    --cmd-btn-justify-content: center;
+    --cmd-btn-align-items: center;
+    --cmd-btn-border-radius: 12px;
+    --cmd-btn-img-height: 50px;
+    --cmd-btn-img-shadow-color: #156082;
+    --cmd-btn-img-shadow-offset: 100px;
+    --cmd-btn-img-border-color: black;
+    --cmd-btn-img-transform: TranslateY(-100px);
+    --cmd-btn-container-width: 70%;
+    --cmd-btn-container-test-border: 2px solid purple;
+    --cmd-btn-container-display: flex;
+    --cmd-btn-container-flexdir: row;
+    --speed-slider-width: 30%;
+    --speed-slider-bg: #f0f0f0;
+    --speed-slider-text-align: center;
+    --speed-slider-test-border: 2px solid orange;
+    --progress-bar-container-width: 85%;
+    --progress-bar-container-bg: #e0e0e0;
+    --progress-bar-container-text-align: center;
+    --progress-bar-container-test-border: 2px solid cyan;
+    --consumable-life-container-width: 15%;
+    --consumable-life-container-bg: #d0d0d0;
+    --consumable-life-container-text-align: center;
+    --consumable-life-container-test-border: 2px solid magenta;
+    --track-width: 300px;
+    --track-height: 40px;
+    --bar-width: 10px;
+    --bar-height: 80px;
+    --triangle-width: 25px;
+    --triangle-height: 70px;
+    --button-size: 30px;
+    --track-color: #7F7F7F;
+    --bar-color: #000000;
+    --text-color: #000000;
+    --font-size: 14px;
+    --button-margin: 30px;
+    --container-height: var(--bar-height);
+}
 
-        .wl-progress-col {
-            flex: 1;
-        }
+.slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    gap: 12px;
+    height: 90px;
+}
 
-        .wl-battery-col {
-            flex: 0 0 100px;
-        }
+.left-control, .right-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        .progress-bar-container {
-            height: var(--progress-bar-height);
-            background-color: var(--progress-bar-bg);
-            position: relative;
-        }
+.arrow {
+    background: none;
+    border: none;
+    color: #156082;
+    font-size: 36px;
+    cursor: pointer;
+    height: 36px;
+}
 
-        .progress-bar {
-            height: 100%;
-            background-color: var(--progress-bar-fill);
-            width: 0%;
-            transition: width 0.1s linear;
-        }
+.label {
+    color: #156082;
+    padding-top: 12px;
+}
 
-        .text-container {
-            width: var(--text-container-width);
-        }
+.track-container {
+    flex: 1;
+    position: relative;
+    height: 20px;
+    width: 100%;
+}
 
-        .time, .date {
-            text-align: center;
-            color: black;
-            font-size: var(--font-size-large);
-            font-weight: bolder;
-        }
+.track {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
 
-        .life-estimator-text {
-            font-size: var(--font-size-small);
-            color: var(--secondary-color);
-            font-style: italic;
-        }
+.left-section {
+    background-color: #7F7F7F;
+    height: 100%;
+}
 
-        #battery-container {
-            position: relative;
-            width: 30px;
-            height: var(--battery-height);
-            border: 1px solid black;
-            background-color: var(--battery-bg);
-            overflow: hidden;
-        }
+.right-section {
+    background-color: #7F7F7F;
+    height: 100%;
+}
 
-        #battery-level {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            transition: height 0.5s ease, background-color 0.5s ease;
-        }
+.handle {
+    position: absolute;
+    top: -22.5px;
+    width: 7.5px;
+    height: 65px;
+    background-color: black;
+    cursor: grab;
+}
 
-        .cmd-btn {
-            width: var(--cmd-btn-width);
-            height: var(--cmd-btn-height);
-            background-color: var(--cmd-btn-bg);
-            outline: 2px solid var(--primary-color);
-            border-radius: 12px;
-        }
+.track::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 10px solid #7F7F7F;
+}
 
-        .cmd-btn img {
-            height: 50px;
-        }
+.track::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 10px solid #7F7F7F;
+}
 
-        .cmd-btn-text {
-            font-size: var(--font-size-small);
-            color: var(--secondary-color);
-            font-style: italic;
-        }
+.label.speed-override {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -10px;
+    color: #4E95D9;
+}
 
-        .wl-cmd-col {
-            flex: 1 0 70%;
-        }
+.progress-bar-container {
+    flex: 1;
+    height: 5px;
+    background-color: #003366;
+    position: relative;
+}
 
-        .wl-slider-col {
-            flex: 1 0 30%;
-            min-width: var(--slider-col-width);
-            width: var(--slider-col-width);
-        }
+.progress-bar {
+    height: 100%;
+    background-color: #66ccff;
+    width: 0%;
+    transition: width 0.1s linear;
+}
 
-        .slider-container {
-            position: relative;
-            height: 90px;
-        }
+.text-container {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        .track-container {
-            flex: 1;
-            position: relative;
-            height: var(--track-height);
-        }
+.time, .date {
+    text-align: center;
+    color: black;
+    font-size: 28px;
+    font-weight: bolder;
+}
 
-        .track {
-            display: flex;
-            height: 100%;
-            width: 100%;
-            position: relative;
-        }
+#battery-container {
+    position: relative;
+    width: 30px;
+    height: 100px;
+    border: 1px solid black;
+    background-color: #AEAEAE;
+    overflow: hidden;
+}
 
-        .left-section, .right-section {
-            background-color: var(--track-color);
-            height: 100%;
-        }
+#battery-level {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transition: height 0.5s ease, background-color 0.5s ease;
+}
 
-        .handle {
-            position: absolute;
-            top: -22.5px;
-            width: 7.5px;
-            height: var(--handle-height);
-            background-color: var(--handle-color);
-            cursor: grab;
-        }
+.cmd-btn {
+    width: var(--cmd-btn-width);
+    max-width: var(--cmd-btn-width);
+    height: var(--cmd-btn-height);
+    background-color: var(--cmd-btn-bg);
+    outline: 2px solid var(--cmd-btn-color);
+    overflow: hidden;
+    display: var(--cmd-btn-display);
+    justify-content: var(--cmd-btn-justify-content);
+    align-items: var(--cmd-btn-align-items);
+    border-radius: var(--cmd-btn-border-radius) !important;
+    border: var(--cmd-btn-test-border);
+}
 
-        .track::before {
-            content: '';
-            position: absolute;
-            left: -10px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-            border-right: 10px solid var(--track-color);
-        }
+.cmd-btn img {
+    width: auto;
+    height: var(--cmd-btn-img-height);
+    filter: drop-shadow(0px var(--cmd-btn-img-shadow-offset) 0 var(--cmd-btn-img-shadow-color)) drop-shadow(1px 0 0 var(--cmd-btn-img-border-color)) drop-shadow(0 1px 0 var(--cmd-btn-img-border-color)) drop-shadow(-1px 0 0 var(--cmd-btn-img-border-color)) drop-shadow(0 -1px 0 var(--cmd-btn-img-border-color));
+    transform: var(--cmd-btn-img-transform);
+}
 
-        .track::after {
-            content: '';
-            position: absolute;
-            right: -10px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-            border-left: 10px solid var(--track-color);
-        }
+.wrapper {
+    height: auto;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    min-width: 400px;
+}
 
-        .arrow {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 36px;
-            cursor: pointer;
-            height: 36px;
-        }
+.row {
+    display: flex;
+}
 
-        .label {
-            color: var(--primary-color);
-            padding-top: 12px;
-        }
+.row-0 {
+    flex-direction: row;
+}
 
-        .speed-override {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: -10px;
-            color: #4E95D9;
-        }
+.col-00 {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
 
-        @media screen and (max-width: 768px) {
-            .cmd-btn {
-                width: 70px;
-            }
-        }
+.col-01 {
+    flex: 0 0 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.life-estimator-text {
+    font-size: 10px;
+    color: #DADADA;
+    font-style: italic;
+}
+
+.row-1 {
+    flex-wrap: wrap;
+    gap: 0px;
+}
+
+.col-10 {
+    flex: 1 0 70%;
+    min-width: auto;
+    background-color: none;
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.col-11 {
+    flex: 1 0 30%;
+    min-width: 300px;
+    width: 300px;
+    background-color: none;
+    justify-content: center;
+    display: flex;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.col-10 .d-flex:nth-of-type(1) {
+    min-width: auto;
+}
+
+.col-10 .d-flex:nth-of-type(2) {
+    gap: 2px;
+    min-width: auto;
+}
+
+.col {
+    text-align: center;
+}
+
+.cmd-btn-text {
+    font-size: 10px;
+    color: #DADADA;
+    font-style: italic;
+}
+
+@media screen and (max-width: 768px) {
+    .cmd-btn {
+        width: 70px !important;
+    }
+}
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
     </style>
 </head>
 <body>
