@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>William's Structure</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-       @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-
 :root {
     --content-wrapper-width: 90vw;
     --content-wrapper-height: auto;
@@ -221,12 +211,12 @@
     border: var(--cmd-btn-test-border);
 }
 
-.cmd-btn img {
-    width: auto;
-    height: var(--cmd-btn-img-height);
-    filter: drop-shadow(0px var(--cmd-btn-img-shadow-offset) 0 var(--cmd-btn-img-shadow-color)) drop-shadow(1px 0 0 var(--cmd-btn-img-border-color)) drop-shadow(0 1px 0 var(--cmd-btn-img-border-color)) drop-shadow(-1px 0 0 var(--cmd-btn-img-border-color)) drop-shadow(0 -1px 0 var(--cmd-btn-img-border-color));
-    transform: var(--cmd-btn-img-transform);
-}
+    .cmd-btn img {
+        width: auto;
+        height: var(--cmd-btn-img-height);
+        filter: drop-shadow(0px var(--cmd-btn-img-shadow-offset) 0 var(--cmd-btn-img-shadow-color)) drop-shadow(1px 0 0 var(--cmd-btn-img-border-color)) drop-shadow(0 1px 0 var(--cmd-btn-img-border-color)) drop-shadow(-1px 0 0 var(--cmd-btn-img-border-color)) drop-shadow(0 -1px 0 var(--cmd-btn-img-border-color));
+        transform: var(--cmd-btn-img-transform);
+    }
 
 .wrapper {
     height: auto;
@@ -283,8 +273,9 @@
     display: flex;
     justify-content: space-between;
     gap: 24px;
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-left: 36px;
+    padding-right: 36px;
+    height: 100px;
 }
 
 .col-11 {
@@ -294,8 +285,9 @@
     background-color: none;
     justify-content: center;
     display: flex;
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-left: 36px;
+    padding-right: 36px;
+    padding-bottom: 24px;
 }
 
 .col-10 .d-flex:nth-of-type(1) {
@@ -323,86 +315,79 @@
     }
 }
 
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-    </style>
-</head>
-<body>
-    <div class="wrapper">
-        <div class="row">
-            <div class="col wl-progress-col d-flex justify-content-center align-items-center">
-                <div class="progress-bar-container">
-                    <div class="progress-bar"></div>
-                </div>
-                <div class="text-container d-flex flex-column align-items-center">
-                    <div class="time"></div>
-                    <div class="date"></div>
-                </div>
+<div class="wrapper">
+    <div class="row row-0">
+        <div class="col col-00">
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
             </div>
-            <div class="wl-battery-col d-flex flex-column justify-content-center align-items-center gap-2">
-                <div class="life-estimator-text">Consumable Life estimator</div>
-                <div id="battery-container">
-                    <div id="battery-level"></div>
-                </div>
+            <div class="text-container">
+                <div class="time"></div>
+                <div class="date"></div>
             </div>
         </div>
-        <div class="row flex-wrap">
-            <div class="wl-cmd-col d-flex justify-content-between gap-3 p-3">
-                <div class="d-flex">
-                    <div class="d-flex flex-column align-items-center gap-2">
-                        <button class="cmd-btn btn btn-secondary rounded"><img class="img-fluid" src="/assets/eject.png" /></button>
-                        <span class="cmd-btn-text">Eject/Abort</span>
-                    </div>
-                </div>
-                <div class="d-flex gap-2">
-                    <div class="d-flex flex-column align-items-center gap-2">
-                        <button class="cmd-btn btn btn-secondary rounded"><img class="img-fluid" src="/assets/backward-track.png" /></button>
-                        <span class="cmd-btn-text">Skip Reverse</span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center gap-2">
-                        <button class="cmd-btn btn btn-secondary rounded"><img class="img-fluid" src="/assets/backward.png" /></button>
-                        <span class="cmd-btn-text">Seek Reverse</span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center gap-2">
-                        <button class="cmd-btn btn btn-secondary rounded"><img class="img-fluid" src="/assets/pause.png" /></button>
-                        <span class="cmd-btn-text">Play/Pause</span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center gap-2">
-                        <button class="cmd-btn btn btn-secondary rounded"><img class="img-fluid" src="/assets/fast-forward.png" /></button>
-                        <span class="cmd-btn-text">Seek Forward</span>
-                    </div>
-                    <div class="d-flex flex-column align-items-center gap-2">
-                        <button class="cmd-btn btn btn-secondary rounded"><img class="img-fluid" src="/assets/next.png" /></button>
-                        <span class="cmd-btn-text">Skip Forward</span>
-                    </div>
-                </div>
+        <div class="col col-01">
+            <div class="life-estimator-text">
+                Consumable Life estimator
             </div>
-            <div class="wl-slider-col d-flex justify-content-center p-3">
-                <div class="slider-container d-flex align-items-center justify-content-center gap-3 w-100">
-                    <div class="left-control d-flex flex-column align-items-center">
-                        <button class="arrow left">-</button>
-                        <div class="label minus-five">-5%</div>
-                    </div>
-                    <div class="track-container">
-                        <div class="track">
-                            <div class="left-section"></div>
-                            <div class="right-section"></div>
-                        </div>
-                        <div class="handle"></div>
-                    </div>
-                    <div class="right-control d-flex flex-column align-items-center">
-                        <button class="arrow right">+</button>
-                        <div class="label plus-five">+5%</div>
-                    </div>
-                    <div class="label speed-override">Speed Override</div>
-                </div>
+        <div id="battery-container">
+            <div id="battery-level">
+            </div>
+        </div>
+            
+        </div>
+    </div>
+    <div class="row row-1">
+    <div class="col-10">
+        <div class="d-flex">
+            <div class="d-flex flex-column align-items-center gap-2">
+                <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/eject.png" /></button>
+                <span class="cmd-btn-text">Eject/Abort</span>
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="d-flex flex-column align-items-center gap-2">
+                <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid"  src="/assets/backward-track.png" /></button>
+                <span class="cmd-btn-text">Skip Reverse</span>
+            </div>
+            <div class="d-flex flex-column align-items-center gap-2" >
+                <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward.png" /></button>
+                <span class="cmd-btn-text">Seek Reverse</span>
+            </div>
+            <div class="d-flex flex-column align-items-center gap-2" >
+                <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/pause.png" /></button>
+                <span class="cmd-btn-text">Play/Pause</span>
+            </div>
+            <div class="d-flex flex-column align-items-center gap-2" >
+                <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/fast-forward.png" /></button>
+                <span class="cmd-btn-text">Seek Forward</span>
+            </div>
+            <div class="d-flex flex-column align-items-center gap-2">
+                <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/next.png" /></button>
+                <span class="cmd-btn-text">Skip Forward</span>
             </div>
         </div>
     </div>
-</body>
-</html>
+        <div class="col col-11">
+            <div class="slider-container">
+                <div class="left-control">
+                    <button class="arrow left">-</button>
+                    <div class="label minus-five">-5%</div>
+                </div>
+                <div class="track-container">
+                    <div class="track">
+                        <div class="left-section"></div>
+                        <div class="right-section"></div>
+                    </div>
+                    <div class="handle"></div>
+                </div>
+                <div class="right-control">
+                    <button class="arrow right">+</button>
+                    <div class="label plus-five">+5%</div>
+                </div>
+                <div class="label speed-override">Speed Override</div>
+            </div>
+        </div>
+    </div>
+</div>
