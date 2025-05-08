@@ -1,8 +1,26 @@
-@code {
+@page "/cad-viewer"
+@using HomagGroup.Blazor3D.Viewers
+@using HomagGroup.Blazor3D.Objects
+@using HomagGroup.Blazor3D.Materials
+@using HomagGroup.Blazor3D.Lights
+@using HomagGroup.Blazor3D.Geometries
+@using Microsoft.JSInterop
 
+<h3>CAD Viewer</h3>
+<div style="position: relative;">
+    <Viewer @ref="View3D1" UseDefaultScene="true" Style="width: 100vw; height: 100vh;" />
+</div>
+
+@code {
+    [Inject] private IJSRuntime JS { get; set; } = default!;
     private Viewer View3D1 = null!;
     private Scene scene = new Scene();
-    private Guid loadedObjectGuid = Guid.NewGuid();
+    private Mesh navigationCube;
+    private Object3D loadedModel;
+    private Vector3 center;
+    private float distance;
+    private bool isDragging = false;
+    private double lastX, lastY;
     private string msg = string.Empty;
 
     public void Dispose()
@@ -20,160 +38,170 @@
     private void AddLights()
     {
         scene.Add(new AmbientLight());
-        scene.Add(new PointLight()
-            {
-                Intensity = 0.5f,
-                Position = new Vector3(100, 200, 100)
-            });
-        scene.Add(new PointLight()
-            {
-                Intensity = 1f,
-                Position = new Vector3(5, 5, 5)
-            });
+        scene.Add(new PointLight
+        {
+            Intensity = 0.5f,
+            Position = new Vector3(100, 200, 100)
+        });
+        scene.Add(new PointLight
+        {
+            Intensity = 1f,
+            Position = new Vector3(5, 5, 5)
+        });
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // subscribe events only once
+            // Subscribe events
             View3D1.ObjectLoaded += OnObjectLoaded;
             View3D1.JsModuleLoaded += OnJsModuleLoaded;
         }
-
         return base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task OnJsModuleLoaded()
     {
-        await JS.InvokeVoidAsync("Slider.initSlider");
-        await JS.InvokeVoidAsync("progressBar.initProgressBar");
-        await JS.InvokeVoidAsync("batteryBar.initBatteryBar");
-        var settings = new ImportSettings
-            {
-                Format = Import3DFormats.Stl,
-                FileURL = "/assets/test.stl",
-
-            };
-        loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
-        View3D1.ViewerSettings.CanSelect = true;
-        View3D1.Scene.Scale = new Vector3(1, 1, 1);
+        // Configure viewer
+        View3D1.ViewerSettings.CanSelect = false; // Disable selection
         View3D1.Scene.BackGroundColor = "White";
         View3D1.OrbitControls.EnablePan = true;
         View3D1.OrbitControls.EnableDamping = true;
-        await View3D1.UpdateScene();
+        View3D1.OrbitControls.EnableZoom = true;
 
-       await View3D1.SetCameraPositionAsync(new Vector3(0, 500, 0), new Vector3(0,-1, 0));
-    }
-
-    private async Task OnLoadObjButtonClick()
-    {
-        // if you need to control the loaded object uuid, generate it here.
-        loadedObjectGuid = Guid.NewGuid();
+        // Load STL
         var settings = new ImportSettings
-            {
-                Format = Import3DFormats.Obj,//choose appropriate format
-                FileURL = "https://threejs.org/examples/models/obj/male02/male02.obj",// link to your model file
-                TextureURL = "https://threejs.org/examples/textures/uv_grid_opengl.jpg", // link to the texture or skip this,
-                Uuid = loadedObjectGuid //// skip this, or set null if you don't care the uuid of loaded mesh or group
-            };
-        await View3D1.Import3DModelAsync(settings);
+        {
+            Format = Import3DFormats.Stl,
+            FileURL = "/assets/test.stl"
+        };
+        loadedModel = await View3D1.Import3DModelAsync(settings);
+        scene.Add(loadedModel);
 
-        // set camera position to view your loaded model
+        // Calculate bounding box for camera positioning
+        var bbox = new Box3().SetFromObject(loadedModel);
+        center = bbox.GetCenter(new Vector3());
+        var size = bbox.GetSize(new Vector3());
+        distance = Math.Max(size.X, Math.Max(size.Y, size.Z)) * 2;
+
+        // Add navigation cube
+        await AddNavigationCube();
+
+        // Set initial camera position
         await View3D1.SetCameraPositionAsync(
-            new Vector3(0, 100, 250),// camera position
-            new Vector3(0, 50, 0));// optional camera target
+            new Vector3(center.X, center.Y, center.Z + distance),
+            center
+        );
+        await View3D1.UpdateScene();
     }
 
-    private async Task OnLoadObjNoTexturesButtonClick()
+    private async Task AddNavigationCube()
     {
-        var settings = new ImportSettings
-            {
-                Format = Import3DFormats.Obj,
-                FileURL = "https://threejs.org/examples/models/obj/male02/male02.obj",
-            };
-        // Also you can get the uuid of object to be imported before its loaded completely
-        loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
-        await View3D1.SetCameraPositionAsync(new Vector3(0, 100, 250), new Vector3(0, 50, 0));
-    }
+        // Create cube with colored faces
+        var geometry = new BoxGeometry { Width = 1, Height = 1, Depth = 1 };
+        var materials = new[]
+        {
+            new MeshBasicMaterial { Color = new Color(0xff0000) }, // Right (+X)
+            new MeshBasicMaterial { Color = new Color(0x00ff00) }, // Left (-X)
+            new MeshBasicMaterial { Color = new Color(0x0000ff) }, // Top (+Y)
+            new MeshBasicMaterial { Color = new Color(0xffff00) }, // Bottom (-Y)
+            new MeshBasicMaterial { Color = new Color(0xff00ff) }, // Front (+Z)
+            new MeshBasicMaterial { Color = new Color(0x00ffff) }  // Back (-Z)
+        };
+        navigationCube = new Mesh { Geometry = geometry, Material = materials };
+        navigationCube.Scale.Set(0.2f, 0.2f, 0.2f);
+        navigationCube.Position.Set(1, -1, -5); // Lower-right corner
+        navigationCube.Rotation.Set(MathF.PI / 4, MathF.PI / 4, 0); // Isometric view
+        View3D1.Camera.Add(navigationCube); // Parent to camera
 
-    private async Task OnLoadColladaButtonClick()
-    {
-        var settings = new ImportSettings
+        // Handle clicks
+        View3D1.OnMouseClick += async (e) =>
+        {
+            var intersected = await View3D1.RaycastAsync(e.X, e.Y);
+            if (intersected != null && intersected.Object == navigationCube)
             {
-                Format = Import3DFormats.Collada,
-                FileURL = "https://threejs.org/examples/models/collada/elf/elf.dae",
-            };
-        loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
-        await View3D1.SetCameraPositionAsync(new Vector3(0, 5, 10), new Vector3(0, 3, 0));
-    }
+                var normal = intersected.Face.Normal;
+                Vector3 newPosition = new Vector3();
 
-    private async Task OnLoadFbxButtonClick()
-    {
-        var settings = new ImportSettings
-            {
-                Format = Import3DFormats.Fbx,
-                FileURL = "https://threejs.org/examples/models/fbx/Samba%20Dancing.fbx",
-            };
-        loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
+                // Snap to view based on face normal
+                if (Math.Abs(normal.Z) > 0.9)
+                {
+                    newPosition.Set(center.X, center.Y, center.Z + (normal.Z > 0 ? distance : -distance));
+                }
+                else if (Math.Abs(normal.Y) > 0.9)
+                {
+                    newPosition.Set(center.X, center.Y + (normal.Y > 0 ? distance : -distance), center.Z);
+                }
+                else if (Math.Abs(normal.X) > 0.9)
+                {
+                    newPosition.Set(center.X + (normal.X > 0 ? distance : -distance), center.Y, center.Z);
+                }
 
-        await View3D1.SetCameraPositionAsync(new Vector3(0, 100, 250), new Vector3(0, 50, 0));
-    }
+                View3D1.Camera.Position = newPosition;
+                View3D1.Camera.LookAt(center);
+                await View3D1.UpdateScene();
+            }
+        };
 
-    private async Task OnLoadGltfButtonClick()
-    {
-        var settings = new ImportSettings
+        // Handle dragging
+        View3D1.OnMouseDown += async (e) =>
+        {
+            var intersected = await View3D1.RaycastAsync(e.X, e.Y);
+            if (intersected != null && intersected.Object == navigationCube)
             {
-                Format = Import3DFormats.Gltf,
-                FileURL = "https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf",
-            };
-        loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
-        await View3D1.SetCameraPositionAsync(new Vector3(0, 1, 5), new Vector3(0, 0.5f, 0));
-    }
-    private async Task OnLoadStlButtonClick()
-    {
-        var settings = new ImportSettings
+                isDragging = true;
+                lastX = e.X;
+                lastY = e.Y;
+                View3D1.OrbitControls.Enabled = false; // Disable default controls during drag
+            }
+        };
+
+        View3D1.OnMouseMove += async (e) =>
+        {
+            if (isDragging)
             {
-                Format = Import3DFormats.Stl,
-                FileURL = "https://threejs.org/examples/models/stl/ascii/slotted_disk.stl",
-            };
-        loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
-        await View3D1.SetCameraPositionAsync(new Vector3(0, 3, 3), new Vector3(0, 1, 0));
+                var deltaX = e.X - lastX;
+                var deltaY = e.Y - lastY;
+
+                // Rotate camera around center
+                var theta = deltaX * 0.005f; // Azimuth
+                var phi = deltaY * 0.005f;   // Polar
+                var currentPos = View3D1.Camera.Position;
+                var offset = currentPos.Subtract(center);
+                var radius = offset.Length();
+
+                theta += (float)Math.Atan2(offset.Y, offset.X);
+                phi = (float)Math.Acos(offset.Z / radius) + phi;
+                phi = Math.Clamp(phi, 0.1f, MathF.PI - 0.1f); // Avoid poles
+
+                offset.X = radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
+                offset.Y = radius * (float)Math.Sin(phi) * (float)Math.Sin(theta);
+                offset.Z = radius * (float)Math.Cos(phi);
+
+                View3D1.Camera.Position = center.Add(offset);
+                View3D1.Camera.LookAt(center);
+
+                lastX = e.X;
+                lastY = e.Y;
+                await View3D1.UpdateScene();
+            }
+        };
+
+        View3D1.OnMouseUp += (e) =>
+        {
+            if (isDragging)
+            {
+                isDragging = false;
+                View3D1.OrbitControls.Enabled = true; // Re-enable default controls
+            }
+        };
     }
 
     private Task OnObjectLoaded(Object3DArgs e)
     {
-        // After object is loaded to component scene, you can locate it's C# clone in the scene.Children
-        // At the moment, only  Object3D.Uuid and Object3D.Type properties are syncronized.
-        foreach (var item in scene.Children)
-        {
-            if (item.Uuid == e.UUID)
-            {
-                this.msg = $"loaded object with id = {e.UUID} and type {item.Type}. Initial guid was {loadedObjectGuid}";
-                StateHasChanged();
-                break;
-            }
-        }
+        msg = $"Loaded object with id = {e.UUID}";
+        StateHasChanged();
         return Task.CompletedTask;
-    }
-
-    // this one clears scene completely. it removes all items: lights, helpers, meshes, etc.
-    private async Task OnClearAllClick()
-    {
-        await View3D1.ClearSceneAsync();
-        AddLights();
-        await View3D1.UpdateScene();
-    }
-
-    // this one removes last item in scene.Children collection.
-    // notice, that first two items are lights
-    private async Task OnDeleteLast()
-    {
-        if (scene.Children.Count > 0)
-        {
-            var last = scene.Children.Last();
-            // removes item by its unique identifier
-            await View3D1.RemoveByUuidAsync(last.Uuid);
-        }
     }
 }
