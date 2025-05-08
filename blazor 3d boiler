@@ -1,14 +1,156 @@
-@page "/cad-viewer"
+@page "/operate"
+@inject IJSRuntime JS
+
 @using HomagGroup.Blazor3D.Viewers
-@using HomagGroup.Blazor3D.Objects
-@using HomagGroup.Blazor3D.Materials
+@using HomagGroup.Blazor3D.Settings
+@using HomagGroup.Blazor3D.Scenes
 @using HomagGroup.Blazor3D.Lights
-@using HomagGroup.Blazor3D.Geometries
+@using HomagGroup.Blazor3D.Maths
+@using HomagGroup.Blazor3D.Materials
+@using HomagGroup.Blazor3D.Objects
+@using HomagGroup.Blazor3D.Geometires
+@using HomagGroup.Blazor3D.Enums
+@using HomagGroup.Blazor3D.Cameras
+@using HomagGroup.Blazor3D.Helpers
+@using HomagGroup.Blazor3D.Events
+@implements IDisposable
 @using Microsoft.JSInterop
 
-<h3>CAD Viewer</h3>
-<div style="position: relative;">
-    <Viewer @ref="View3D1" UseDefaultScene="true" Style="width: 100vw; height: 100vh;" />
+
+
+
+<div class="h-100 w-100 row mx-auto justify-content-center">
+    <div id="Info" class="h-25 justify-content-center">
+        <h3 class="text-center fw-bolder m-5">Pipe 12345</h3>
+    </div>
+
+    <div class="h-50">
+        <div class="row" style="height:500px;">
+            <Viewer @ref="View3D1" Scene=scene />
+        </div>
+    </div>
+
+   
+        <div class="wrapper">
+            <div class="row row-0">
+                <div class="col col-00">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="text-container">
+                        <div class="time"></div>
+                        <div class="date"></div>
+                    </div>
+                </div>
+                <div class="col col-01">
+                    <div class="life-estimator-text">
+                        Consumable Life estimator
+                    </div>
+                <div id="battery-container">
+                    <div id="battery-level">
+                    </div>
+                </div>
+                    
+                </div>
+            </div>
+            <div class="row row-1">
+            <div class="col-10">
+                <div class="d-flex">
+                    <div class="d-flex flex-column align-items-center gap-2">
+                        <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/eject.png" /></button>
+                        <span class="cmd-btn-text">Eject/Abort</span>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="d-flex flex-column align-items-center gap-2">
+                        <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid"  src="/assets/backward-track.png" /></button>
+                        <span class="cmd-btn-text">Skip Reverse</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center gap-2" >
+                        <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward.png" /></button>
+                        <span class="cmd-btn-text">Seek Reverse</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center gap-2" >
+                        <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/pause.png" /></button>
+                        <span class="cmd-btn-text">Play/Pause</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center gap-2" >
+                        <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/fast-forward.png" /></button>
+                        <span class="cmd-btn-text">Seek Forward</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center gap-2">
+                        <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/next.png" /></button>
+                        <span class="cmd-btn-text">Skip Forward</span>
+                    </div>
+                </div>
+            </div>
+                <div class="col col-11">
+                    <div class="slider-container">
+                        <div class="left-control">
+                            <button class="arrow left">-</button>
+                            <div class="label minus-five">-5%</div>
+                        </div>
+                        <div class="track-container">
+                            <div class="track">
+                                <div class="left-section"></div>
+                                <div class="right-section"></div>
+                            </div>
+                            <div class="handle"></div>
+                        </div>
+                        <div class="right-control">
+                            <button class="arrow right">+</button>
+                            <div class="label plus-five">+5%</div>
+                        </div>
+                        <div class="label speed-override">Speed Override</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @* <div class="content-wrapper"> *@
+        @*     @*CONTENT-CONTAINER 1 START: PROGRESS BAR & CONSUMABLE LIFE ESTIMATOR*@ 
+        @*     <div class="content-container"> *@
+        @*         <div class="cmd-btn-container justify-content-between"> *@
+        @*             <div> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward-track.png" /></button> *@
+        @*             </div> *@
+        @*             <div class="d-flex flex-row"> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward-track.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/play-button-arrowhead.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/pause.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/fast-forward.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/next.png" /></button> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*         <div class="speed-slider-container"> *@
+        @*             <div class="slider-btn minus" title="Decrease by 5%"> *@
+        @*                 <span>-</span> *@
+        @*                 <div class="slider-btn-text">-5%</div> *@
+        @*             </div> *@
+        @*             <div class="slider-container"> *@
+        @*                 <div class="slider-track"></div> *@
+        @*                 <div class="slider-bar"></div> *@
+        @*                 <div class="slider-percent-left">0%</div> *@
+        @*                 <div class="slider-percent-right">100%</div> *@
+        @*             </div> *@
+        @*             <div class="slider-btn plus" title="Increase by 5%"> *@
+        @*                 <span>+</span> *@
+        @*                 <div class="slider-btn-text">+5%</div> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*     </div> *@
+        @*     @*CONTENT CONTAINER 1 END*@ 
+        @*     @*CONTENT CONTAINER 2 START: COMMAND BUTTONS & SPEED OVERRIDE SLIDER*@ 
+        @*     <div class="content-container"> *@
+        @*         <div class="progress-bar-container"></div> *@
+        @*         <div class="consumable-life-container"></div> *@
+        @*     </div> *@
+        @*     @*CONTENT CONTAINER 2 END*@ 
+        @* </div> *@
+
+    
 </div>
 
 @code {
@@ -39,15 +181,15 @@
     {
         scene.Add(new AmbientLight());
         scene.Add(new PointLight
-        {
-            Intensity = 0.5f,
-            Position = new Vector3(100, 200, 100)
-        });
+            {
+                Intensity = 0.5f,
+                Position = new Vector3(100, 200, 100)
+            });
         scene.Add(new PointLight
-        {
-            Intensity = 1f,
-            Position = new Vector3(5, 5, 5)
-        });
+            {
+                Intensity = 1f,
+                Position = new Vector3(5, 5, 5)
+            });
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -72,10 +214,10 @@
 
         // Load STL
         var settings = new ImportSettings
-        {
-            Format = Import3DFormats.Stl,
-            FileURL = "/assets/test.stl"
-        };
+            {
+                Format = Import3DFormats.Stl,
+                FileURL = "/assets/test.stl"
+            };
         loadedModel = await View3D1.Import3DModelAsync(settings);
         scene.Add(loadedModel);
 
