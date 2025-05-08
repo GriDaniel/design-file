@@ -8,12 +8,14 @@
 @using HomagGroup.Blazor3D.Maths
 @using HomagGroup.Blazor3D.Materials
 @using HomagGroup.Blazor3D.Objects
-@using HomagGroup.Blazor3D.Geometries
+@using HomagGroup.Blazor3D.Geometires
 @using HomagGroup.Blazor3D.Enums
 @using HomagGroup.Blazor3D.Cameras
 @using HomagGroup.Blazor3D.Helpers
 @using HomagGroup.Blazor3D.Events
 @implements IDisposable
+
+
 
 <div class="h-100 w-100 row mx-auto justify-content-center">
     <div id="Info" class="h-25 justify-content-center">
@@ -22,31 +24,34 @@
 
     <div class="h-50">
         <div class="row" style="height:500px;">
-            <Viewer @ref="View3D1" Scene="scene" ID="viewer-canvas" />
+            <Viewer @ref="View3D1" Scene=scene />
         </div>
     </div>
 
-    <div class="wrapper">
-        <div class="row row-0">
-            <div class="col col-00">
-                <div class="progress-bar-container">
-                    <div class="progress-bar"></div>
+   
+        <div class="wrapper">
+            <div class="row row-0">
+                <div class="col col-00">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="text-container">
+                        <div class="time"></div>
+                        <div class="date"></div>
+                    </div>
                 </div>
-                <div class="text-container">
-                    <div class="time"></div>
-                    <div class="date"></div>
-                </div>
-            </div>
-            <div class="col col-01">
-                <div class="life-estimator-text">
-                    Consumable Life estimator
-                </div>
+                <div class="col col-01">
+                    <div class="life-estimator-text">
+                        Consumable Life estimator
+                    </div>
                 <div id="battery-container">
-                    <div id="battery-level"></div>
+                    <div id="battery-level">
+                    </div>
+                </div>
+                    
                 </div>
             </div>
-        </div>
-        <div class="row row-1">
+            <div class="row row-1">
             <div class="col-10">
                 <div class="d-flex">
                     <div class="d-flex flex-column align-items-center gap-2">
@@ -56,18 +61,18 @@
                 </div>
                 <div class="d-flex">
                     <div class="d-flex flex-column align-items-center gap-2">
-                        <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward-track.png" /></button>
+                        <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid"  src="/assets/backward-track.png" /></button>
                         <span class="cmd-btn-text">Skip Reverse</span>
                     </div>
-                    <div class="d-flex flex-column align-items-center gap-2">
+                    <div class="d-flex flex-column align-items-center gap-2" >
                         <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward.png" /></button>
                         <span class="cmd-btn-text">Seek Reverse</span>
                     </div>
-                    <div class="d-flex flex-column align-items-center gap-2">
+                    <div class="d-flex flex-column align-items-center gap-2" >
                         <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/pause.png" /></button>
                         <span class="cmd-btn-text">Play/Pause</span>
                     </div>
-                    <div class="d-flex flex-column align-items-center gap-2">
+                    <div class="d-flex flex-column align-items-center gap-2" >
                         <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/fast-forward.png" /></button>
                         <span class="cmd-btn-text">Seek Forward</span>
                     </div>
@@ -77,44 +82,81 @@
                     </div>
                 </div>
             </div>
-            <div class="col col-11">
-                <div class="slider-container">
-                    <div class="left-control">
-                        <button class="arrow left">-</button>
-                        <div class="label minus-five">-5%</div>
-                    </div>
-                    <div class="track-container">
-                        <div class="track">
-                            <div class="left-section"></div>
-                            <div class="right-section"></div>
+                <div class="col col-11">
+                    <div class="slider-container">
+                        <div class="left-control">
+                            <button class="arrow left">-</button>
+                            <div class="label minus-five">-5%</div>
                         </div>
-                        <div class="handle"></div>
+                        <div class="track-container">
+                            <div class="track">
+                                <div class="left-section"></div>
+                                <div class="right-section"></div>
+                            </div>
+                            <div class="handle"></div>
+                        </div>
+                        <div class="right-control">
+                            <button class="arrow right">+</button>
+                            <div class="label plus-five">+5%</div>
+                        </div>
+                        <div class="label speed-override">Speed Override</div>
                     </div>
-                    <div class="right-control">
-                        <button class="arrow right">+</button>
-                        <div class="label plus-five">+5%</div>
-                    </div>
-                    <div class="label speed-override">Speed Override</div>
                 </div>
             </div>
         </div>
-    </div>
+
+
+        @* <div class="content-wrapper"> *@
+        @*     @*CONTENT-CONTAINER 1 START: PROGRESS BAR & CONSUMABLE LIFE ESTIMATOR*@ 
+        @*     <div class="content-container"> *@
+        @*         <div class="cmd-btn-container justify-content-between"> *@
+        @*             <div> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward-track.png" /></button> *@
+        @*             </div> *@
+        @*             <div class="d-flex flex-row"> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward-track.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/backward.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/play-button-arrowhead.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/pause.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/fast-forward.png" /></button> *@
+        @*                 <button class="cmd-btn btn btn-secondary col rounded"><img class="img-fluid" src="/assets/next.png" /></button> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*         <div class="speed-slider-container"> *@
+        @*             <div class="slider-btn minus" title="Decrease by 5%"> *@
+        @*                 <span>-</span> *@
+        @*                 <div class="slider-btn-text">-5%</div> *@
+        @*             </div> *@
+        @*             <div class="slider-container"> *@
+        @*                 <div class="slider-track"></div> *@
+        @*                 <div class="slider-bar"></div> *@
+        @*                 <div class="slider-percent-left">0%</div> *@
+        @*                 <div class="slider-percent-right">100%</div> *@
+        @*             </div> *@
+        @*             <div class="slider-btn plus" title="Increase by 5%"> *@
+        @*                 <span>+</span> *@
+        @*                 <div class="slider-btn-text">+5%</div> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*     </div> *@
+        @*     @*CONTENT CONTAINER 1 END*@ 
+        @*     @*CONTENT CONTAINER 2 START: COMMAND BUTTONS & SPEED OVERRIDE SLIDER*@ 
+        @*     <div class="content-container"> *@
+        @*         <div class="progress-bar-container"></div> *@
+        @*         <div class="consumable-life-container"></div> *@
+        @*     </div> *@
+        @*     @*CONTENT CONTAINER 2 END*@ 
+        @* </div> *@
+
+    
 </div>
 
 @code {
-    [Inject] private IJSRuntime JS { get; set; } = default!;
+
     private Viewer View3D1 = null!;
     private Scene scene = new Scene();
     private Guid loadedObjectGuid = Guid.NewGuid();
     private string msg = string.Empty;
-
-    // Navigation cube variables
-    private Mesh navigationCube;
-    private Mesh loadedModel;
-    private Vector3 center;
-    private float distance;
-    private bool isDragging = false;
-    private double lastX, lastY;
 
     public void Dispose()
     {
@@ -131,27 +173,27 @@
     private void AddLights()
     {
         scene.Add(new AmbientLight());
-        scene.Add(new PointLight
-        {
-            Intensity = 0.5f,
-            Position = new Vector3(100, 200, 100)
-        });
-        scene.Add(new PointLight
-        {
-            Intensity = 1f,
-            Position = new Vector3(5, 5, 5)
-        });
+        scene.Add(new PointLight()
+            {
+                Intensity = 0.5f,
+                Position = new Vector3(100, 200, 100)
+            });
+        scene.Add(new PointLight()
+            {
+                Intensity = 1f,
+                Position = new Vector3(5, 5, 5)
+            });
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            // subscribe events only once
             View3D1.ObjectLoaded += OnObjectLoaded;
             View3D1.JsModuleLoaded += OnJsModuleLoaded;
-            // Initialize JavaScript mouse event listeners
-            await JS.InvokeVoidAsync("Blazor3DInterop.initMouseEvents", "viewer-canvas", DotNetObjectReference.Create(this));
         }
+
         return base.OnAfterRenderAsync(firstRender);
     }
 
@@ -161,161 +203,49 @@
         await JS.InvokeVoidAsync("progressBar.initProgressBar");
         await JS.InvokeVoidAsync("batteryBar.initBatteryBar");
         var settings = new ImportSettings
-        {
-            Format = Import3DFormats.Stl,
-            FileURL = "/assets/test.stl"
-        };
+            {
+                Format = Import3DFormats.Stl,
+                FileURL = "/assets/test.stl",
+
+            };
         loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
-        View3D1.ViewerSettings.CanSelect = false;
+        View3D1.ViewerSettings.CanSelect = true;
+        View3D1.Scene.Scale = new Vector3(1, 1, 1);
         View3D1.Scene.BackGroundColor = "White";
         View3D1.OrbitControls.EnablePan = true;
         View3D1.OrbitControls.EnableDamping = true;
-        View3D1.OrbitControls.EnableZoom = true;
         await View3D1.UpdateScene();
 
-        // Add navigation cube
-        await AddNavigationCube();
-    }
-
-    private async Task AddNavigationCube()
-    {
-        var geometry = new BoxGeometry { Width = 1, Height = 1, Depth = 1 };
-        var materials = new[]
-        {
-            new MeshBasicMaterial { Color = new Color(0xff0000) }, // Right (+X)
-            new MeshBasicMaterial { Color = new Color(0x00ff00) }, // Left (-X)
-            new MeshBasicMaterial { Color = new Color(0x0000ff) }, // Top (+Y)
-            new MeshBasicMaterial { Color = new Color(0xffff00) }, // Bottom (-Y)
-            new MeshBasicMaterial { Color = new Color(0xff00ff) }, // Front (+Z)
-            new MeshBasicMaterial { Color = new Color(0x00ffff) }  // Back (-Z)
-        };
-        navigationCube = new Mesh { Geometry = geometry, Material = materials };
-        navigationCube.Scale.Set(0.2f, 0.2f, 0.2f);
-        navigationCube.Position.Set(1, -1, -5);
-        navigationCube.Rotation.Set(MathF.PI / 4, MathF.PI / 4, 0);
-        View3D1.Camera.Add(navigationCube);
-        await View3D1.UpdateScene();
-    }
-
-    private async Task OnObjectLoaded(Object3DArgs e)
-    {
-        foreach (var item in scene.Children)
-        {
-            if (item.Uuid == e.UUID)
-            {
-                loadedModel = item as Mesh;
-                this.msg = $"Loaded object with id = {e.UUID} and type {item.Type}. Initial guid was {loadedObjectGuid}";
-                if (loadedModel != null)
-                {
-                    var bbox = new Box3().SetFromObject(loadedModel);
-                    center = bbox.GetCenter(new Vector3());
-                    var size = bbox.GetSize(new Vector3());
-                    distance = Math.Max(size.X, Math.Max(size.Y, size.Z)) * 2;
-                    await View3D1.SetCameraPositionAsync(center + new Vector3(0, 0, distance), center);
-                }
-                StateHasChanged();
-                break;
-            }
-        }
-    }
-
-    [JSInvokable]
-    public async Task HandleMouseClick(double x, double y)
-    {
-        var intersected = await View3D1.RaycastAsync(x, y);
-        if (intersected != null && intersected.Object == navigationCube)
-        {
-            var normal = intersected.Face.Normal;
-            Vector3 newPosition = new Vector3();
-
-            if (Math.Abs(normal.Z) > 0.9)
-                newPosition.Set(center.X, center.Y, center.Z + (normal.Z > 0 ? distance : -distance));
-            else if (Math.Abs(normal.Y) > 0.9)
-                newPosition.Set(center.X, center.Y + (normal.Y > 0 ? distance : -distance), center.Z);
-            else if (Math.Abs(normal.X) > 0.9)
-                newPosition.Set(center.X + (normal.X > 0 ? distance : -distance), center.Y, center.Z);
-
-            View3D1.Camera.Position = newPosition;
-            View3D1.Camera.LookAt(center);
-            await View3D1.UpdateScene();
-        }
-    }
-
-    [JSInvokable]
-    public async Task HandleMouseDown(double x, double y)
-    {
-        var intersected = await View3D1.RaycastAsync(x, y);
-        if (intersected != null && intersected.Object == navigationCube)
-        {
-            isDragging = true;
-            lastX = x;
-            lastY = y;
-            View3D1.OrbitControls.Enabled = false;
-        }
-    }
-
-    [JSInvokable]
-    public async Task HandleMouseMove(double x, double y)
-    {
-        if (isDragging)
-        {
-            var deltaX = x - lastX;
-            var deltaY = y - lastY;
-
-            var currentPos = View3D1.Camera.Position;
-            var offset = currentPos.Subtract(center);
-            var radius = offset.Length();
-
-            var theta = deltaX * 0.005f;
-            var phi = deltaY * 0.005f;
-            theta += (float)Math.Atan2(offset.Y, offset.X);
-            phi = (float)Math.Acos(offset.Z / radius) + phi;
-            phi = Math.Clamp(phi, 0.1f, MathF.PI - 0.1f);
-
-            offset.X = radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
-            offset.Y = radius * (float)Math.Sin(phi) * (float)Math.Sin(theta);
-            offset.Z = radius * (float)Math.Cos(phi);
-
-            View3D1.Camera.Position = center.Add(offset);
-            View3D1.Camera.LookAt(center);
-
-            lastX = x;
-            lastY = y;
-            await View3D1.UpdateScene();
-        }
-    }
-
-    [JSInvokable]
-    public async Task HandleMouseUp()
-    {
-        if (isDragging)
-        {
-            isDragging = false;
-            View3D1.OrbitControls.Enabled = true;
-        }
+       await View3D1.SetCameraPositionAsync(new Vector3(0, 500, 0), new Vector3(0,-1, 0));
     }
 
     private async Task OnLoadObjButtonClick()
     {
+        // if you need to control the loaded object uuid, generate it here.
         loadedObjectGuid = Guid.NewGuid();
         var settings = new ImportSettings
-        {
-            Format = Import3DFormats.Obj,
-            FileURL = "https://threejs.org/examples/models/obj/male02/male02.obj",
-            TextureURL = "https://threejs.org/examples/textures/uv_grid_opengl.jpg",
-            Uuid = loadedObjectGuid
-        };
+            {
+                Format = Import3DFormats.Obj,//choose appropriate format
+                FileURL = "https://threejs.org/examples/models/obj/male02/male02.obj",// link to your model file
+                TextureURL = "https://threejs.org/examples/textures/uv_grid_opengl.jpg", // link to the texture or skip this,
+                Uuid = loadedObjectGuid //// skip this, or set null if you don't care the uuid of loaded mesh or group
+            };
         await View3D1.Import3DModelAsync(settings);
-        await View3D1.SetCameraPositionAsync(new Vector3(0, 100, 250), new Vector3(0, 50, 0));
+
+        // set camera position to view your loaded model
+        await View3D1.SetCameraPositionAsync(
+            new Vector3(0, 100, 250),// camera position
+            new Vector3(0, 50, 0));// optional camera target
     }
 
     private async Task OnLoadObjNoTexturesButtonClick()
     {
         var settings = new ImportSettings
-        {
-            Format = Import3DFormats.Obj,
-            FileURL = "https://threejs.org/examples/models/obj/male02/male02.obj",
-        };
+            {
+                Format = Import3DFormats.Obj,
+                FileURL = "https://threejs.org/examples/models/obj/male02/male02.obj",
+            };
+        // Also you can get the uuid of object to be imported before its loaded completely
         loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
         await View3D1.SetCameraPositionAsync(new Vector3(0, 100, 250), new Vector3(0, 50, 0));
     }
@@ -323,10 +253,10 @@
     private async Task OnLoadColladaButtonClick()
     {
         var settings = new ImportSettings
-        {
-            Format = Import3DFormats.Collada,
-            FileURL = "https://threejs.org/examples/models/collada/elf/elf.dae",
-        };
+            {
+                Format = Import3DFormats.Collada,
+                FileURL = "https://threejs.org/examples/models/collada/elf/elf.dae",
+            };
         loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
         await View3D1.SetCameraPositionAsync(new Vector3(0, 5, 10), new Vector3(0, 3, 0));
     }
@@ -334,36 +264,53 @@
     private async Task OnLoadFbxButtonClick()
     {
         var settings = new ImportSettings
-        {
-            Format = Import3DFormats.Fbx,
-            FileURL = "https://threejs.org/examples/models/fbx/Samba%20Dancing.fbx",
-        };
+            {
+                Format = Import3DFormats.Fbx,
+                FileURL = "https://threejs.org/examples/models/fbx/Samba%20Dancing.fbx",
+            };
         loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
+
         await View3D1.SetCameraPositionAsync(new Vector3(0, 100, 250), new Vector3(0, 50, 0));
     }
 
     private async Task OnLoadGltfButtonClick()
     {
         var settings = new ImportSettings
-        {
-            Format = Import3DFormats.Gltf,
-            FileURL = "https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf",
-        };
+            {
+                Format = Import3DFormats.Gltf,
+                FileURL = "https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf",
+            };
         loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
         await View3D1.SetCameraPositionAsync(new Vector3(0, 1, 5), new Vector3(0, 0.5f, 0));
     }
-
     private async Task OnLoadStlButtonClick()
     {
         var settings = new ImportSettings
-        {
-            Format = Import3DFormats.Stl,
-            FileURL = "https://threejs.org/examples/models/stl/ascii/slotted_disk.stl",
-        };
+            {
+                Format = Import3DFormats.Stl,
+                FileURL = "https://threejs.org/examples/models/stl/ascii/slotted_disk.stl",
+            };
         loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
         await View3D1.SetCameraPositionAsync(new Vector3(0, 3, 3), new Vector3(0, 1, 0));
     }
 
+    private Task OnObjectLoaded(Object3DArgs e)
+    {
+        // After object is loaded to component scene, you can locate it's C# clone in the scene.Children
+        // At the moment, only  Object3D.Uuid and Object3D.Type properties are syncronized.
+        foreach (var item in scene.Children)
+        {
+            if (item.Uuid == e.UUID)
+            {
+                this.msg = $"loaded object with id = {e.UUID} and type {item.Type}. Initial guid was {loadedObjectGuid}";
+                StateHasChanged();
+                break;
+            }
+        }
+        return Task.CompletedTask;
+    }
+
+    // this one clears scene completely. it removes all items: lights, helpers, meshes, etc.
     private async Task OnClearAllClick()
     {
         await View3D1.ClearSceneAsync();
@@ -371,12 +318,17 @@
         await View3D1.UpdateScene();
     }
 
+    // this one removes last item in scene.Children collection.
+    // notice, that first two items are lights
     private async Task OnDeleteLast()
     {
         if (scene.Children.Count > 0)
         {
             var last = scene.Children.Last();
+            // removes item by its unique identifier
             await View3D1.RemoveByUuidAsync(last.Uuid);
         }
     }
 }
+
+  
