@@ -8,7 +8,7 @@
 @using HomagGroup.Blazor3D.Maths
 @using HomagGroup.Blazor3D.Materials
 @using HomagGroup.Blazor3D.Objects
-@using HomagGroup.Blazor3D.Geometires
+@using HomagGroup.Blazor3D.Geometries
 @using HomagGroup.Blazor3D.Enums
 @using HomagGroup.Blazor3D.Cameras
 @using HomagGroup.Blazor3D.Helpers
@@ -22,7 +22,7 @@
 
     <div class="h-50">
         <div class="row" style="height:500px;">
-            <Viewer @ref="View3D1" Scene=scene />
+            <Viewer @ref="View3D1" Scene="scene" ID="viewer-canvas" />
         </div>
     </div>
 
@@ -42,8 +42,7 @@
                     Consumable Life estimator
                 </div>
                 <div id="battery-container">
-                    <div id="battery-level">
-                    </div>
+                    <div id="battery-level"></div>
                 </div>
             </div>
         </div>
@@ -103,14 +102,15 @@
 </div>
 
 @code {
+    [Inject] private IJSRuntime JS { get; set; } = default!;
     private Viewer View3D1 = null!;
     private Scene scene = new Scene();
     private Guid loadedObjectGuid = Guid.NewGuid();
     private string msg = string.Empty;
 
     // Navigation cube variables
-    private Mesh navCube;
-    private Object3D loadedModel;
+    private Mesh navigationCube;
+    private Mesh loadedModel;
     private Vector3 center;
     private float distance;
     private bool isDragging = false;
@@ -120,10 +120,6 @@
     {
         View3D1.ObjectLoaded -= OnObjectLoaded;
         View3D1.JsModuleLoaded -= OnJsModuleLoaded;
-        View3D1.OnMouseClick -= OnMouseClick;
-        View3D1.OnMouseDown -= OnMouseDown;
-        View3D1.OnMouseMove -= OnMouseMove;
-        View3D1.OnMouseUp -= OnMouseUp;
     }
 
     protected override Task OnInitializedAsync()
@@ -135,29 +131,26 @@
     private void AddLights()
     {
         scene.Add(new AmbientLight());
-        scene.Add(new PointLight()
+        scene.Add(new PointLight
         {
             Intensity = 0.5f,
             Position = new Vector3(100, 200, 100)
         });
-        scene.Add(new PointLight()
+        scene.Add(new PointLight
         {
             Intensity = 1f,
             Position = new Vector3(5, 5, 5)
         });
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             View3D1.ObjectLoaded += OnObjectLoaded;
             View3D1.JsModuleLoaded += OnJsModuleLoaded;
-            // Subscribe to mouse events (assuming Viewer supports these; otherwise, JS interop is needed)
-            View3D1.OnMouseClick += OnMouseClick;
-            View3D1.OnMouseDown += OnMouseDown;
-            View3D1.OnMouseMove += OnMouseMove;
-            View3D1.OnMouseUp += OnMouseUp;
+            // Initialize JavaScript mouse event listeners
+            await JS.InvokeVoidAsync("Blazor3DInterop.initMouseEvents", "viewer-canvas", DotNetObjectReference.Create(this));
         }
         return base.OnAfterRenderAsync(firstRender);
     }
@@ -170,24 +163,37 @@
         var settings = new ImportSettings
         {
             Format = Import3DFormats.Stl,
-            FileURL = "/assets/test.stl",
+            FileURL = "/assets/test.stl"
         };
         loadedObjectGuid = await View3D1.Import3DModelAsync(settings);
-        View3D1.ViewerSettings.CanSelect = true;
-        View3D1.Scene.Scale = new Vector3(1, 1, 1);
+        View3D1.ViewerSettings.CanSelect = false;
         View3D1.Scene.BackGroundColor = "White";
         View3D1.OrbitControls.EnablePan = true;
         View3D1.OrbitControls.EnableDamping = true;
+        View3D1.OrbitControls.EnableZoom = true;
         await View3D1.UpdateScene();
 
-        await View3D1.SetCameraPositionAsync(new Vector3(0, 500, 0), new Vector3(0, -1, 0));
+        // Add navigation cube
+        await AddNavigationCube();
+    }
 
-        // Create and add the navigation cube
-        var cubeGeometry = new BoxGeometry(0.5f, 0.5f, 0.5f);
-        var cubeMaterial = new MeshBasicMaterial { Color = new Color(0x888888), Transparent = true, Opacity = 0.5f };
-        navCube = new Mesh { Geometry = cubeGeometry, Material = cubeMaterial };
-        navCube.Position.Set(2, -2, -5); // Position in camera space (e.g., lower-right corner)
-        View3D1.Camera.Add(navCube);
+    private async Task AddNavigationCube()
+    {
+        var geometry = new BoxGeometry { Width = 1, Height = 1, Depth = 1 };
+        var materials = new[]
+        {
+            new MeshBasicMaterial { Color = new Color(0xff0000) }, // Right (+X)
+            new MeshBasicMaterial { Color = new Color(0x00ff00) }, // Left (-X)
+            new MeshBasicMaterial { Color = new Color(0x0000ff) }, // Top (+Y)
+            new MeshBasicMaterial { Color = new Color(0xffff00) }, // Bottom (-Y)
+            new MeshBasicMaterial { Color = new Color(0xff00ff) }, // Front (+Z)
+            new MeshBasicMaterial { Color = new Color(0x00ffff) }  // Back (-Z)
+        };
+        navigationCube = new Mesh { Geometry = geometry, Material = materials };
+        navigationCube.Scale.Set(0.2f, 0.2f, 0.2f);
+        navigationCube.Position.Set(1, -1, -5);
+        navigationCube.Rotation.Set(MathF.PI / 4, MathF.PI / 4, 0);
+        View3D1.Camera.Add(navigationCube);
         await View3D1.UpdateScene();
     }
 
@@ -197,104 +203,98 @@
         {
             if (item.Uuid == e.UUID)
             {
-                loadedModel = item;
-                this.msg = $"loaded object with id = {e.UUID} and type {item.Type}. Initial guid was {loadedObjectGuid}";
-                // Calculate model center and viewing distance
-                var bbox = new Box3().SetFromObject(loadedModel);
-                center = bbox.GetCenter(new Vector3());
-                var size = bbox.GetSize(new Vector3());
-                distance = Math.Max(size.X, Math.Max(size.Y, size.Z)) * 2;
+                loadedModel = item as Mesh;
+                this.msg = $"Loaded object with id = {e.UUID} and type {item.Type}. Initial guid was {loadedObjectGuid}";
+                if (loadedModel != null)
+                {
+                    var bbox = new Box3().SetFromObject(loadedModel);
+                    center = bbox.GetCenter(new Vector3());
+                    var size = bbox.GetSize(new Vector3());
+                    distance = Math.Max(size.X, Math.Max(size.Y, size.Z)) * 2;
+                    await View3D1.SetCameraPositionAsync(center + new Vector3(0, 0, distance), center);
+                }
                 StateHasChanged();
                 break;
             }
         }
     }
 
-    // Mouse event handlers for navigation cube
-    private async Task OnMouseClick(MouseEventArgs e)
+    [JSInvokable]
+    public async Task HandleMouseClick(double x, double y)
     {
-        var intersected = await View3D1.RaycastAsync(e.X, e.Y);
-        if (intersected != null && intersected.Object == navCube)
+        var intersected = await View3D1.RaycastAsync(x, y);
+        if (intersected != null && intersected.Object == navigationCube)
         {
             var normal = intersected.Face.Normal;
-            SetCameraToView(normal);
+            Vector3 newPosition = new Vector3();
+
+            if (Math.Abs(normal.Z) > 0.9)
+                newPosition.Set(center.X, center.Y, center.Z + (normal.Z > 0 ? distance : -distance));
+            else if (Math.Abs(normal.Y) > 0.9)
+                newPosition.Set(center.X, center.Y + (normal.Y > 0 ? distance : -distance), center.Z);
+            else if (Math.Abs(normal.X) > 0.9)
+                newPosition.Set(center.X + (normal.X > 0 ? distance : -distance), center.Y, center.Z);
+
+            View3D1.Camera.Position = newPosition;
+            View3D1.Camera.LookAt(center);
+            await View3D1.UpdateScene();
         }
     }
 
-    private async Task OnMouseDown(MouseEventArgs e)
+    [JSInvokable]
+    public async Task HandleMouseDown(double x, double y)
     {
-        var intersected = await View3D1.RaycastAsync(e.X, e.Y);
-        if (intersected != null && intersected.Object == navCube)
+        var intersected = await View3D1.RaycastAsync(x, y);
+        if (intersected != null && intersected.Object == navigationCube)
         {
             isDragging = true;
-            lastX = e.X;
-            lastY = e.Y;
-            View3D1.OrbitControls.Enabled = false; // Disable default controls during drag
+            lastX = x;
+            lastY = y;
+            View3D1.OrbitControls.Enabled = false;
         }
     }
 
-    private async Task OnMouseMove(MouseEventArgs e)
+    [JSInvokable]
+    public async Task HandleMouseMove(double x, double y)
     {
         if (isDragging)
         {
-            var deltaX = e.X - lastX;
-            var deltaY = e.Y - lastY;
+            var deltaX = x - lastX;
+            var deltaY = y - lastY;
 
             var currentPos = View3D1.Camera.Position;
-            var offset = currentPos - center;
+            var offset = currentPos.Subtract(center);
             var radius = offset.Length();
 
-            var theta = (float)Math.Atan2(offset.Y, offset.X);
-            var phi = (float)Math.Acos(offset.Z / radius);
-
-            theta += deltaX * 0.005f;
-            phi += deltaY * 0.005f;
-            phi = Math.Clamp(phi, 0.1f, MathF.PI - 0.1f); // Avoid poles
+            var theta = deltaX * 0.005f;
+            var phi = deltaY * 0.005f;
+            theta += (float)Math.Atan2(offset.Y, offset.X);
+            phi = (float)Math.Acos(offset.Z / radius) + phi;
+            phi = Math.Clamp(phi, 0.1f, MathF.PI - 0.1f);
 
             offset.X = radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
             offset.Y = radius * (float)Math.Sin(phi) * (float)Math.Sin(theta);
             offset.Z = radius * (float)Math.Cos(phi);
 
-            View3D1.Camera.Position = center + offset;
+            View3D1.Camera.Position = center.Add(offset);
             View3D1.Camera.LookAt(center);
 
-            lastX = e.X;
-            lastY = e.Y;
+            lastX = x;
+            lastY = y;
             await View3D1.UpdateScene();
         }
     }
 
-    private async Task OnMouseUp(MouseEventArgs e)
+    [JSInvokable]
+    public async Task HandleMouseUp()
     {
         if (isDragging)
         {
             isDragging = false;
-            View3D1.OrbitControls.Enabled = true; // Re-enable default controls
+            View3D1.OrbitControls.Enabled = true;
         }
     }
 
-    private async void SetCameraToView(Vector3 normal)
-    {
-        Vector3 newPosition = new Vector3();
-        if (normal.Z > 0.9) // Front
-            newPosition.Set(center.X, center.Y, center.Z + distance);
-        else if (normal.Z < -0.9) // Back
-            newPosition.Set(center.X, center.Y, center.Z - distance);
-        else if (normal.X > 0.9) // Right
-            newPosition.Set(center.X + distance, center.Y, center.Z);
-        else if (normal.X < -0.9) // Left
-            newPosition.Set(center.X - distance, center.Y, center.Z);
-        else if (normal.Y > 0.9) // Top
-            newPosition.Set(center.X, center.Y + distance, center.Z);
-        else if (normal.Y < -0.9) // Bottom
-            newPosition.Set(center.X, center.Y - distance, center.Z);
-
-        View3D1.Camera.Position = newPosition;
-        View3D1.Camera.LookAt(center);
-        await View3D1.UpdateScene();
-    }
-
-    // Existing methods for loading other formats (unchanged)
     private async Task OnLoadObjButtonClick()
     {
         loadedObjectGuid = Guid.NewGuid();
